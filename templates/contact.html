@@ -1,0 +1,297 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+.contact-card {
+    background: white;
+    max-width: 500px;
+    margin: 40px auto;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.form-control {
+    border-radius: 8px;
+    padding: 4px;
+}
+
+.error-text {
+    color: red;
+    font-size: 12px;
+    display: none;
+}
+
+.btn-custom {
+    background: linear-gradient(to right, #2c3e50, #4ca1af);
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: 600;
+}
+
+.btn-custom:hover {
+    opacity: 0.9;
+    color: white;
+}
+
+.btn-loading {
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+.toast-box {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: #0f172a;
+    color: white;
+    padding: 15px 20px;
+    border-radius: 8px;
+    display: none;
+    z-index: 9999;
+}
+
+.whatsapp-btn {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    background: #25D366;
+    color: white;
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+}
+/* TELEGRAM FLOAT BUTTON */
+.telegram-btn {
+    position: fixed;
+    bottom: 90px; /* above WhatsApp */
+    right: 25px;
+    background: #229ED9;
+    color: white;
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    z-index: 9999;
+    cursor: pointer;
+}
+
+/* POPUP BACKGROUND */
+.telegram-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.6);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+/* POPUP BOX */
+.telegram-box {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    text-align: center;
+    width: 320px;
+    animation: fadeInUp 0.3s ease;
+}
+
+.telegram-box h4 {
+    margin-bottom: 10px;
+    color: #2c3e50;
+}
+
+.telegram-box p {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 20px;
+}
+
+/* CLOSE BUTTON */
+.close-btn {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 20px;
+    cursor: pointer;
+}
+</style>
+
+<div id="toast" class="toast-box"></div>
+
+<div class="contact-card">
+    <h3 class="text-center mb-4">Contact Us</h3>
+
+    <form id="contactForm">
+        {% csrf_token %}
+
+        <div class="mb-3">
+            <label>Full Name</label>
+            <input id="name" type="text" class="form-control">
+            <div id="nameError" class="error-text">Name required</div>
+        </div>
+
+        <div class="mb-3">
+            <label>Email</label>
+            <input id="email" type="email" class="form-control">
+            <div id="emailError" class="error-text">Email required</div>
+        </div>
+
+        <div class="mb-3">
+            <label>Subject</label>
+            <input id="subject" type="text" class="form-control">
+            <div id="subjectError" class="error-text">Subject required</div>
+        </div>
+
+        <div class="mb-3">
+            <label>Message</label>
+            <textarea id="message" class="form-control"></textarea>
+            <div id="messageError" class="error-text">Message required</div>
+        </div>
+
+        <button type="submit" id="submitBtn" class="btn btn-custom w-100">
+            Send Message
+        </button>
+    </form>
+</div>
+
+<a href="https://wa.me/251912345678" target="_blank" class="whatsapp-btn">
+    <i class="fab fa-whatsapp"></i>
+</a>
+<a href="javascript:void(0)" onclick="openTelegramPopup()" class="telegram-btn">
+    <i class="fab fa-telegram-plane"></i>
+</a>
+<div id="telegramPopup" class="telegram-popup">
+    <div class="telegram-box">
+
+        <span class="close-btn" onclick="closeTelegramPopup()">&times;</span>
+
+        <h4>Join us on Telegram 🚀</h4>
+        <p>Get latest job updates instantly.</p>
+
+        <a href="https://t.me/yourchannel" target="_blank" class="btn-main">
+            Join Channel
+        </a>
+
+    </div>
+</div>
+<script>
+
+// CSRF
+function getCookie(name) {
+    let cookieValue = null;
+    document.cookie.split(';').forEach(c => {
+        c = c.trim();
+        if (c.startsWith(name + '=')) {
+            cookieValue = decodeURIComponent(c.slice(name.length + 1));
+        }
+    });
+    return cookieValue;
+}
+
+// TOAST
+function showToast(message, success=true) {
+    const toast = document.getElementById("toast");
+    toast.innerText = message;
+    toast.style.background = success ? "#16a34a" : "#dc2626";
+    toast.style.display = "block";
+
+    setTimeout(() => {
+        toast.style.display = "none";
+    }, 3000);
+}
+
+// FORM SUBMIT
+document.getElementById("contactForm").addEventListener("submit", function(e){
+    e.preventDefault();
+
+    let valid = true;
+
+    function check(id, errorId){
+        const field = document.getElementById(id);
+        if(!field.value.trim()){
+            document.getElementById(errorId).style.display = "block";
+            valid = false;
+        } else {
+            document.getElementById(errorId).style.display = "none";
+        }
+    }
+
+    check("name","nameError");
+    check("email","emailError");
+    check("subject","subjectError");
+    check("message","messageError");
+
+    if(!valid){
+        showToast("Please fill all fields", false);
+        return;
+    }
+
+    const btn = document.getElementById("submitBtn");
+    btn.innerText = "Sending...";
+    btn.classList.add("btn-loading");
+
+    // ✅ FIXED VALUES
+    const name = document.getElementById("name").value;
+    const email = document.getElementById("email").value;
+    const subject = document.getElementById("subject").value;
+    const message = document.getElementById("message").value;
+
+    const data = new URLSearchParams();
+    data.append("name", name);
+    data.append("email", email);
+    data.append("subject", subject);
+    data.append("message", message);
+
+    fetch("/jobs/contact/", {
+        method: "POST",
+        headers: {
+    "Content-Type": "application/x-www-form-urlencoded",
+    "X-CSRFToken": getCookie("csrftoken"),
+    "X-Requested-With": "XMLHttpRequest"   // 🔥 THIS LINE
+},
+        body: data
+    })
+    .then(res => res.json())
+    .then(data => {
+
+        btn.innerText = "Send Message";
+        btn.classList.remove("btn-loading");
+
+        if(data.success){
+            showToast("✅ Message sent successfully!");
+            document.getElementById("contactForm").reset();
+        } else {
+            showToast("Something went wrong", false);
+        }
+    })
+    .catch(() => {
+        btn.innerText = "Send Message";
+        btn.classList.remove("btn-loading");
+        showToast("Server error", false);
+    });
+
+});
+function openTelegramPopup() {
+    document.getElementById("telegramPopup").style.display = "flex";
+}
+
+function closeTelegramPopup() {
+    document.getElementById("telegramPopup").style.display = "none";
+}
+</script>
+
+{% endblock %}

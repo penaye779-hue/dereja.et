@@ -1,0 +1,166 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+
+/* HERO */
+.policy-hero {
+    background: linear-gradient(to right, #2c3e50, #4ca1af);
+    color: white;
+    padding: 70px 20px;
+    text-align: center;
+    border-radius: 12px;
+}
+
+/* CARD */
+.policy-card {
+    max-width: 1000px;
+    margin: -50px auto 40px;
+    background: #fff;
+    padding: 40px;
+    border-radius: 14px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+    animation: fadeInUp 0.5s ease;
+}
+
+/* TITLES */
+.policy-card h1 {
+    font-size: 30px;
+    color: #2c3e50;
+    margin-bottom: 10px;
+}
+
+.policy-card h2 {
+    font-size: 18px;
+    margin-top: 25px;
+    color: #4ca1af;
+}
+
+/* TEXT */
+.policy-card p,
+.policy-card li {
+    font-size: 15px;
+    color: #555;
+    line-height: 1.7;
+}
+
+/* LIST */
+.policy-card ul {
+    padding-left: 20px;
+}
+
+/* DIVIDER */
+.divider {
+    height: 1px;
+    background: #eee;
+    margin: 20px 0;
+}
+
+/* ANIMATION */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(25px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+</style>
+
+<!-- HERO -->
+<div class="policy-hero">
+    <h2>Privacy Policy</h2>
+    <p>Your data, your control</p>
+</div>
+
+<!-- CARD -->
+<div class="policy-card">
+
+<h1>Privacy Policy</h1>
+<p><strong>Effective Date:</strong> 2026</p>
+
+<h2>1. Introduction</h2>
+<p>
+Welcome to <strong>DEREJA.et</strong>.  
+We are committed to protecting your personal data and your privacy.
+</p>
+
+<p>
+This Privacy Policy explains how we collect, use, and safeguard your information when you use our website.
+</p>
+
+<div class="divider"></div>
+
+<h2>2. Information We Collect</h2>
+
+<p>We may collect the following types of information:</p>
+
+<ul>
+<li>Email address (for subscriptions)</li>
+<li>Name and contact details (via forms)</li>
+<li>Job application data</li>
+<li>Usage data (pages visited, time spent)</li>
+</ul>
+
+<div class="divider"></div>
+
+<h2>3. How We Use Your Data</h2>
+
+<ul>
+<li>To provide job listings</li>
+<li>To improve our platform</li>
+<li>To send job alerts (if subscribed)</li>
+<li>To respond to your messages</li>
+</ul>
+
+<div class="divider"></div>
+
+<h2>4. Cookies</h2>
+<p>
+We use cookies to improve your experience.  
+You can disable cookies in your browser settings.
+</p>
+
+<div class="divider"></div>
+
+<h2>5. Data Protection</h2>
+<p>
+We take reasonable steps to protect your data.  
+However, no internet system is 100% secure.
+</p>
+
+<div class="divider"></div>
+
+<h2>6. Third-Party Links</h2>
+<p>
+Our website may contain links to external job postings.  
+We are not responsible for their content or privacy practices.
+</p>
+
+<div class="divider"></div>
+
+<h2>7. Children’s Privacy</h2>
+<p>
+Our platform is not intended for users under 18 years old.
+</p>
+
+<div class="divider"></div>
+
+<h2>8. Changes to This Policy</h2>
+<p>
+We may update this policy at any time. Changes will appear on this page.
+</p>
+
+<div class="divider"></div>
+
+<h2>9. Contact Us</h2>
+<p>
+If you have any questions, please visit our Contact page.
+</p>
+
+</div>
+
+{% endblock %}

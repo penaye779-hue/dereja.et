@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>DEREJA.et</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+html { scroll-behavior: smooth; }
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f4f6f8;
+}
+
+/* THEME COLORS */
+:root {
+    --primary-dark: #2c3e50;
+    --primary-light: #4ca1af;
+}
+
+/* NAVBAR */
+.navbar {
+    background: linear-gradient(to right, #2c3e50, #4ca1af);
+    padding: 22px 40px;
+    border-bottom: 1px solid #eee;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+/* NAV LINKS */
+.navbar a {
+    text-decoration: none;
+    color: #ddd;
+    font-size: 15px;
+    position: relative;
+    transition: 0.3s;
+}
+
+/* 🔥 HOVER LINE */
+.navbar a::after {
+    content: "";
+    position: absolute;
+    width: 0%;
+    height: 2px;
+    left: 0;
+    bottom: -4px;
+    background: #fff;
+    transition: width 0.3s ease;
+}
+
+.navbar a:hover::after { width: 100%; }
+.navbar a:hover { color: #fff; }
+.navbar a.fw-bold { color: #fff; }
+
+/* LOGO */
+.logo-gradient {
+    font-weight: bold;
+    font-size: 45px;
+    background: linear-gradient(to right, #ffffff, #4ca1af);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* CONTENT */
+.container {
+    width: 90%;
+    max-width: 1100px;
+    margin: auto;
+    margin-top: 30px;
+}
+
+/* ADD THIS BELOW */
+.cvb-page {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* BUTTON */
+/* CUSTOM BUTTON (SAFE GLOBAL USE) */
+.btn-custom {
+    background: linear-gradient(to right, #2c3e50, #4ca1af);
+    color: white;
+    border: none;
+}
+
+.btn-custom:hover {
+    opacity: 0.9;
+    color: white;
+}
+
+/* CONTACT FULL WIDTH BUTTON */
+.btn-block {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+}
+.btn-primary:hover { opacity: 0.9; }
+
+/* LOGOUT */
+.logout-btn {
+    color: #5be0dea8;
+    border: 1px solid rgba(255,255,255,0.5);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.logout-btn:hover {
+    background: #57c7cdb4;
+    color: #2c3e50;
+    border-color: #fff;
+}
+
+/* INPUT */
+.form-control:focus {
+    border-color: var(--primary-dark);
+    box-shadow: 0 0 0 0.1rem rgba(44, 62, 80, 0.25);
+}
+
+/* FOOTER */
+.footer {
+    background: #0f172a;
+    color: #ccc;
+    padding: 40px 30px;
+    margin-top: 50px;
+}
+
+.footer-container {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 30px;
+    max-width: 1100px;
+    margin: auto;
+}
+
+.footer-middle { flex: 1.5; }
+
+.footer-column {
+    flex: 1;
+    min-width: 200px;
+}
+
+.footer-column h5 {
+    color: #fff;
+    margin-bottom: 15px;
+}
+
+.footer-column a {
+    display: block;
+    color: #ccc;
+    text-decoration: none;
+    margin-bottom: 8px;
+    font-size: 14px;
+    position: relative;
+}
+.btn-main {
+    background: linear-gradient(to right, #2c3e50, #4ca1af);
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+}
+
+.btn-main:hover {
+    opacity: 0.9;
+    color: white;
+}
+
+/* FOOTER ANIMATION */
+.footer-column a::after {
+    content: "";
+    position: absolute;
+    width: 0%;
+    height: 1px;
+    left: 0;
+    bottom: -3px;
+    background: #4ca1af;
+    transition: width 0.3s;
+}
+
+.footer-column a:hover::after { width: 100%; }
+.footer-column a:hover { color: var(--primary-light); }
+
+/* FORCE COLOR */
+.footer a { color: #ccc !important; }
+.footer a:hover { color: var(--primary-light) !important; }
+
+.footer-logo {
+    font-weight: bold;
+    font-size: 20px;
+    background: linear-gradient(to right, #2c3e50, #4ca1af);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.footer-bottom {
+    text-align: center;
+    margin-top: 30px;
+    border-top: 1px solid #333;
+    padding-top: 15px;
+    font-size: 13px;
+    color: #888;
+}
+
+/* SUBSCRIBE */
+.subscribe-box {
+    display: flex;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.subscribe-box input {
+    flex: 1;
+    height: 35px;
+    border-radius: 20px 0 0 20px;
+}
+
+.subscribe-box button {
+    border-radius: 0 20px 20px 0;
+}
+
+/* SCROLLBAR */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(to bottom, #2c3e50, #4ca1af);
+    border-radius: 10px;
+}
+.social-icons {
+    display: flex;
+    gap: 12px;
+    margin-top: 10px;
+}
+
+.social-icons a {
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #1e293b;
+    border-radius: 50%;
+    color: #ccc;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+/* 🔥 HOVER EFFECT */
+.social-icons a:hover {
+    background: linear-gradient(to right, #2c3e50, #4ca1af);
+    color: #fff;
+    transform: translateY(-3px);
+}
+/* FIX ONLY BOOTSTRAP BLUE BUTTONS */
+.btn-primary {
+    background: linear-gradient(to right, #2c3e50, #4ca1af) !important;
+    border: none !important;
+    color: #fff !important;
+}
+
+.btn-primary:hover {
+    opacity: 0.9;
+    color: #fff !important;
+}
+</style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<div class="navbar d-flex align-items-center justify-content-between">
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+    <a href="/" class="logo-gradient">DEREJA.et</a>
+    <!-- CENTER LINKS -->
+    <div class="d-flex gap-4 align-items-center">
+
+        <a href="/" class="{% if request.path == '/' %}fw-bold{% endif %}">
+            Home
+        </a>
+
+        <a href="/jobs/" class="{% if 'jobs' in request.path %}fw-bold{% endif %}">
+            Jobs
+        </a>
+
+        <a href="{% url 'contact' %}" class="{% if 'contact' in request.path %}fw-bold{% endif %}">
+            Contact
+        </a>
+
+        <!-- ⭐ SAVED JOBS (NEW CLEAN POSITION) -->
+        <a href="/jobs/saved/"
+           class="d-flex align-items-center gap-1 position-relative {% if 'saved' in request.path %}fw-bold{% endif %}">
+
+            <i class="fas fa-bookmark"></i>
+            Saved
+
+            <!-- optional badge -->
+            <span id="savedCountBadge"
+                  class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                  style="font-size:10px;">
+                0
+            </span>
+        </a>
+
+    </div>
+
+    <!-- RIGHT AUTH -->
+    <div>
+        {% if user.is_authenticated %}
+            <a href="/accounts/logout/" class="logout-btn">Logout</a>
+        {% else %}
+            <a href="/accounts/login/" class="me-2">Login</a>
+            <a href="/accounts/register/">Register</a>
+        {% endif %}
+    </div>
+
+</div>
+
+<!-- CONTENT -->
+<div class="{% block container_class %}container{% endblock %}">
+    {% block content %}{% endblock %}
+</div>
+
+<p style="font-size:13px; color:#888; margin-top:20px; text-align:center;">
+    DEREJA.et is not responsible for external job postings.
+</p>
+
+<!-- FOOTER -->
+<!-- FOOTER -->
+<!-- FOOTER -->
+<footer class="footer">
+    <div class="footer-container">
+
+        <!-- BRAND -->
+        <div class="footer-column">
+            <a href="/" class="footer-logo">DEREJA.et</a>
+            <p>
+                Find the latest job opportunities in Ethiopia.<br>
+                Simple.<br>
+                Fast.<br>
+                Reliable.
+            </p>
+        </div>
+
+        <!-- QUICK LINKS -->
+        <div class="footer-column footer-middle">
+            <h5>Quick Links</h5>
+            <a href="/">Home</a>
+            <a href="/jobs/">Jobs</a>
+            <a href="{% url 'contact' %}">Contact</a>
+            <a href="{% url 'about' %}">About Us</a>
+        </div>
+
+        <!-- LEGAL -->
+        <div class="footer-column">
+            <h5>Legal</h5>
+            <a href="{% url 'privacy' %}">Privacy Policy</a>
+            <a href="{% url 'terms' %}">Terms of Service</a>
+            <a href="{% url 'disclaimer' %}">Disclaimer</a>
+        </div>
+
+        <!-- RIGHT COLUMN (SOCIAL + SUBSCRIBE) -->
+        <div class="footer-column">
+
+            <h5>Follow Us</h5>
+
+            <!-- SOCIAL FIRST -->
+            <div class="social-icons">
+                <a href="https://facebook.com/yourpage">
+                    <i class="fab fa-facebook-f"></i>
+                </a>
+
+                <a href="https://t.me/DEREJAet">
+                    <i class="fab fa-telegram"></i>
+                </a>
+
+                <a href="https://linkedin.com/company/yourcompany">
+                    <i class="fab fa-linkedin-in"></i>
+                </a>
+
+                <a href="https://twitter.com/yourhandle">
+                    <i class="fab fa-x-twitter"></i>
+                </a>
+            </div>
+
+            <!-- SUBSCRIBE BELOW -->
+            <h5 class="mt-4">Stay Updated</h5>
+
+            <div class="subscribe-box">
+                <input id="footerEmail" type="email" placeholder="Enter your email" class="form-control">
+                <button onclick="subscribeFooter()" class="btn btn-main btn-sm">
+                    Subscribe
+                </button>
+            </div>
+
+            <p id="footerMsg" style="font-size:12px; margin-top:10px;"></p>
+
+            <small class="text-muted d-block mt-2">
+                Get latest jobs directly in your inbox.
+            </small>
+
+        </div>
+
+    </div>
+
+    <div class="footer-bottom">
+        © 2026 DEREJA.et. All rights reserved.
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let cookie of cookies) {
+            cookie = cookie.trim();
+            if (cookie.startsWith(name + '=')) {
+                cookieValue = decodeURIComponent(cookie.slice(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+function subscribeFooter() {
+    const email = document.getElementById("footerEmail").value;
+    const msg = document.getElementById("footerMsg");
+
+    if (!email) {
+        msg.innerHTML = "Please enter email";
+        msg.style.color = "red";
+        return;
+    }
+
+    fetch("/subscribe/", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            "X-CSRFToken": getCookie("csrftoken")
+        },
+        body: "email=" + encodeURIComponent(email)
+    })
+    .then(res => {
+        if (!res.ok) {
+            throw new Error("Server error");
+        }
+        return res.json();
+    })
+    .then(data => {
+        if (data.error) {
+            msg.innerHTML = data.error;
+            msg.style.color = "red";
+        } else {
+            msg.innerHTML = data.message;
+            msg.style.color = "lightgreen";
+            document.getElementById("footerEmail").value = "";
+        }
+    })
+    .catch(() => {
+        msg.innerHTML = "Server error. Try again.";
+        msg.style.color = "red";
+    });
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+
+/* HERO */
+.policy-hero {
+    background: linear-gradient(to right, #2c3e50, #4ca1af);
+    color: white;
+    padding: 70px 20px;
+    text-align: center;
+    border-radius: 12px;
+}
+
+/* CARD */
+.policy-card {
+    max-width: 1000px;
+    margin: -50px auto 40px;
+    background: #fff;
+    padding: 40px;
+    border-radius: 14px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+    animation: fadeInUp 0.5s ease;
+}
+
+/* TITLES */
+.policy-card h1 {
+    font-size: 30px;
+    color: #2c3e50;
+    margin-bottom: 10px;
+}
+
+.policy-card h2 {
+    font-size: 18px;
+    margin-top: 25px;
+    color: #4ca1af;
+}
+
+/* TEXT */
+.policy-card p {
+    font-size: 15px;
+    color: #555;
+    line-height: 1.7;
+}
+
+/* DIVIDER */
+.divider {
+    height: 1px;
+    background: #eee;
+    margin: 20px 0;
+}
+
+/* ANIMATION */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(25px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+</style>
+
+<!-- HERO -->
+<div class="policy-hero">
+    <h2>Disclaimer</h2>
+    <p>Important information about using DEREJA.et</p>
+</div>
+
+<!-- CARD -->
+<div class="policy-card">
+
+<h1>Disclaimer</h1>
+
+<h2>1. General Information</h2>
+<p>
+All information on <strong>DEREJA.et</strong> is provided in good faith for general job listing purposes.
+</p>
+
+<div class="divider"></div>
+
+<h2>2. External Jobs</h2>
+<p>
+We are not responsible for job postings from external websites or employers.
+Always verify job details before applying.
+</p>
+
+<div class="divider"></div>
+
+<h2>3. No Guarantees</h2>
+<p>
+We do not guarantee job availability, accuracy, or employment outcomes.
+</p>
+
+<div class="divider"></div>
+
+<h2>4. User Responsibility</h2>
+<p>
+Users are responsible for verifying job authenticity and protecting their personal information.
+</p>
+
+<div class="divider"></div>
+
+<h2>5. Limitation of Liability</h2>
+<p>
+We are not liable for losses, scams, or damages related to job applications.
+</p>
+
+</div>
+
+{% endblock %}

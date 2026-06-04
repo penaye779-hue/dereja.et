@@ -1,0 +1,673 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/cv_builder.css' %}">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+
+<div class="cvb-root">
+
+  <!-- ══════════════════ STEPPER ══════════════════ -->
+  <div class="cvb-stepper">
+    {% for num, label in steps %}
+    <div class="cvb-step {% if step == num %}active{% elif step > num %}done{% endif %}">
+      <div class="cvb-step-circle">
+        {% if step > num %}
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        {% else %}{{ num }}{% endif %}
+      </div>
+      <span class="cvb-step-label">{{ label }}</span>
+    </div>
+    {% if not forloop.last %}<div class="cvb-step-line {% if step > num %}done{% endif %}"></div>{% endif %}
+    {% endfor %}
+  </div>
+
+  <!-- ══════════════════ STEP 1: IMPORT ══════════════════ -->
+  {% if step == "1" %}
+  <div class="cvb-import-page">
+    <div class="cvb-import-card">
+      <div class="cvb-import-hero">
+        <div class="cvb-import-icon">
+          <svg width="40" height="40" viewBox="0 0 40 40" fill="none"><rect width="40" height="40" rx="12" fill="var(--accent-light)"/><path d="M20 8v16m0-16l-5 5m5-5l5 5" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 28h20" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"/></svg>
+        </div>
+        <h1 class="cvb-import-title">Build your CV</h1>
+        <p class="cvb-import-sub">Upload an existing PDF to auto-fill your details, or start fresh.</p>
+      </div>
+
+      <form method="POST" enctype="multipart/form-data" id="upload-form">
+        {% csrf_token %}
+        <div class="cvb-dropzone" id="dropzone">
+          <input type="file" id="cv_pdf_input" name="cv_pdf" accept=".pdf" hidden>
+          <div class="cvb-drop-inner" id="drop-inner">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><path d="M16 4C9.373 4 4 9.373 4 16s5.373 12 12 12 12-5.373 12-12S22.627 4 16 4z" stroke="var(--accent)" stroke-width="1.5"/><path d="M16 10v8m0-8l-3 3m3-3l3 3" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round"/><path d="M11 22h10" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round"/></svg>
+            <p class="cvb-drop-main">Drop your PDF here</p>
+            <p class="cvb-drop-hint">or <label for="cv_pdf_input" class="cvb-drop-link">browse files</label></p>
+            <p class="cvb-drop-fname" id="drop-fname"></p>
+          </div>
+        </div>
+        <button type="submit" name="action" value="upload" class="cvb-btn-primary cvb-btn-full" id="upload-btn" disabled>
+          Extract & Continue
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10m0 0l-4-4m4 4l-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </form>
+
+      <div class="cvb-or"><span>or</span></div>
+
+      <form method="POST">
+        {% csrf_token %}
+        <button type="submit" name="action" value="scratch" class="cvb-btn-secondary cvb-btn-full">
+          Start from scratch
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ══════════════════ STEP 1 CONFIRM ══════════════════ -->
+  {% elif step == "1_confirm" %}
+  <div class="cvb-confirm-page">
+    <div class="cvb-confirm-header">
+      <h2>Review extracted info</h2>
+      <p>We found the following from your PDF. Edit anything that looks wrong before continuing.</p>
+    </div>
+
+    {% if extracted.parse_error %}
+    <div class="cvb-alert">⚠ Parsing issue: {{ extracted.parse_error }} — fill in manually below.</div>
+    {% endif %}
+
+    <form method="POST" action="?step=1_confirm" class="cvb-confirm-form">
+      {% csrf_token %}
+      <div class="cvb-section-card">
+        <div class="cvb-card-header"><span class="cvb-card-icon">👤</span><h3>Personal Info</h3></div>
+        <div class="cvb-grid-2">
+          <div class="cvb-field"><label>Full Name</label><input name="full_name" value="{{ extracted.full_name }}"></div>
+          <div class="cvb-field"><label>Email</label><input name="email" type="email" value="{{ extracted.email }}"></div>
+          <div class="cvb-field"><label>Phone</label><input name="phone" value="{{ extracted.phone }}"></div>
+          <div class="cvb-field"><label>Address</label><input name="address" value="{{ extracted.address }}"></div>
+          <div class="cvb-field"><label>Website</label><input name="website" value="{{ extracted.website }}"></div>
+          <div class="cvb-field"><label>LinkedIn</label><input name="linkedin" value="{{ extracted.linkedin }}"></div>
+        </div>
+        <div class="cvb-field" style="margin-top:12px"><label>Summary</label><textarea name="summary" rows="3">{{ extracted.summary }}</textarea></div>
+      </div>
+
+      <div class="cvb-section-card">
+        <div class="cvb-card-header"><span class="cvb-card-icon">⚡</span><h3>Skills found</h3></div>
+        <div id="skills-confirm-container" class="cvb-tags-input">
+          {% for skill in extracted.skills %}
+          <div class="cvb-tag-row"><input name="skills[]" value="{{ skill }}"><button type="button" class="remove cvb-tag-remove">×</button></div>
+          {% empty %}
+          <div class="cvb-tag-row"><input name="skills[]" placeholder="Add a skill"><button type="button" class="remove cvb-tag-remove">×</button></div>
+          {% endfor %}
+        </div>
+        <button type="button" onclick="addSkillConfirm()" class="cvb-btn-ghost">+ Add Skill</button>
+      </div>
+
+      <div class="cvb-confirm-nav">
+        <a href="?step=1" class="cvb-btn-ghost">← Back</a>
+        <button type="submit" class="cvb-btn-primary">Looks good — Continue →</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- ══════════════════ STEP 2: EDIT (Europass-style) ══════════════════ -->
+  {% elif step == "2" %}
+  <div class="cvb-edit-page">
+
+    <form method="POST" enctype="multipart/form-data" id="cv-form">
+    {% csrf_token %}
+
+    <!-- ── PROFILE HERO CARD ── -->
+    <div class="cvb-profile-card" id="card-personal">
+      <div class="cvb-profile-view" id="view-personal">
+        <div class="cvb-profile-photo-wrap">
+          {% if cv.profile_image %}
+          <img src="{{ cv.profile_image.url }}" class="cvb-profile-photo" alt="Profile">
+          {% else %}
+          <div class="cvb-profile-photo cvb-profile-photo-empty">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="12" r="5" stroke="currentColor" stroke-width="1.5"/><path d="M6 26c0-5.523 4.477-10 10-10s10 4.477 10 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          {% endif %}
+          <label for="profile_image_input" class="cvb-photo-edit-btn" title="Change photo">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9.5 2.5l2 2L4 12H2v-2L9.5 2.5z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>
+          </label>
+        </div>
+        <div class="cvb-profile-info">
+          <h2 class="cvb-profile-name">{{ cv.full_name|default:"Your Name" }}</h2>
+          <div class="cvb-profile-contacts">
+            {% if cv.email %}<span>✉ {{ cv.email }}</span>{% endif %}
+            {% if cv.phone %}<span>📞 {{ cv.phone }}</span>{% endif %}
+            {% if cv.address %}<span>📍 {{ cv.address }}</span>{% endif %}
+            {% if cv.website %}<span>🌐 {{ cv.website }}</span>{% endif %}
+            {% if cv.linkedin %}<span>in {{ cv.linkedin }}</span>{% endif %}
+          </div>
+          {% if cv.summary %}<p class="cvb-profile-summary">{{ cv.summary|truncatechars:160 }}</p>{% endif %}
+        </div>
+        <button type="button" class="cvb-edit-btn" onclick="toggleSection('personal')">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9.5 2.5l2 2L4 12H2v-2L9.5 2.5z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>
+          Edit
+        </button>
+      </div>
+
+      <!-- PERSONAL INLINE FORM -->
+      <div class="cvb-inline-form" id="form-personal" style="display:none">
+        <input type="file" name="profile_image" id="profile_image_input" accept="image/*" hidden>
+        <div class="cvb-grid-2">
+          <div class="cvb-field"><label>Full Name *</label><input name="full_name" value="{{ cv.full_name }}" required placeholder="John Doe"></div>
+          <div class="cvb-field"><label>Email *</label><input name="email" type="email" value="{{ cv.email }}" required placeholder="john@email.com"></div>
+          <div class="cvb-field"><label>Phone</label><input name="phone" value="{{ cv.phone }}" placeholder="+251 91 234 5678"></div>
+          <div class="cvb-field"><label>Address</label><input name="address" value="{{ cv.address }}" placeholder="Addis Ababa, Ethiopia"></div>
+          <div class="cvb-field"><label>Nationality</label><input name="nationality" value="{{ cv.nationality }}" placeholder="Ethiopian"></div>
+          <div class="cvb-field"><label>Date of Birth</label><input name="date_of_birth" type="date" value="{{ cv.date_of_birth|date:'Y-m-d' }}"></div>
+          <div class="cvb-field"><label>Website</label><input name="website" value="{{ cv.website }}" placeholder="https://yoursite.com"></div>
+          <div class="cvb-field"><label>LinkedIn</label><input name="linkedin" value="{{ cv.linkedin }}" placeholder="linkedin.com/in/you"></div>
+          <div class="cvb-field"><label>GitHub</label><input name="github" value="{{ cv.github }}" placeholder="github.com/you"></div>
+        </div>
+        <div class="cvb-field" style="margin-top:4px"><label>Professional Summary</label><textarea name="summary" rows="3" placeholder="A brief description of who you are...">{{ cv.summary }}</textarea></div>
+        <div class="cvb-inline-form-actions">
+          <button type="button" class="cvb-btn-ghost" onclick="toggleSection('personal')">Cancel</button>
+          <button type="submit" class="cvb-btn-save">Save section</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SKILLS CARD ── -->
+    <div class="cvb-section-card" id="card-skills">
+      <div class="cvb-card-header-row">
+        <div class="cvb-card-title"><span class="cvb-card-icon">⚡</span><h3>Skills</h3></div>
+        <div class="cvb-card-actions">
+          <button type="button" class="cvb-edit-btn" onclick="toggleSection('skills')">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9.5 2.5l2 2L4 12H2v-2L9.5 2.5z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>
+            Edit
+          </button>
+        </div>
+      </div>
+
+      <!-- VIEW MODE -->
+      <div class="cvb-card-view" id="view-skills">
+        {% if cv.skills_list.exists %}
+        <div class="cvb-skill-tags-view">
+          {% for s in cv.skills_list.all %}
+          <span class="cvb-skill-pill">{{ s.name }}{% if s.level %} <em>· {{ s.get_level_display }}</em>{% endif %}</span>
+          {% endfor %}
+        </div>
+        {% else %}
+        <p class="cvb-empty-hint">No skills added yet. Click Edit to add your skills.</p>
+        {% endif %}
+      </div>
+
+      <!-- EDIT MODE -->
+      <div class="cvb-inline-form" id="form-skills" style="display:none">
+        <div id="skills-container">
+          {% for s in cv.skills_list.all %}
+          <div class="cvb-skill-row">
+            <input name="skills[]" value="{{ s.name }}" placeholder="e.g. Python">
+            <select name="skill_level[]">
+              <option value="">Level</option>
+              <option value="beginner" {% if s.level == "beginner" %}selected{% endif %}>Beginner</option>
+              <option value="intermediate" {% if s.level == "intermediate" %}selected{% endif %}>Intermediate</option>
+              <option value="advanced" {% if s.level == "advanced" %}selected{% endif %}>Advanced</option>
+              <option value="expert" {% if s.level == "expert" %}selected{% endif %}>Expert</option>
+            </select>
+            <button type="button" class="remove cvb-row-remove">×</button>
+          </div>
+          {% empty %}
+          <div class="cvb-skill-row">
+            <input name="skills[]" placeholder="e.g. Python">
+            <select name="skill_level[]"><option value="">Level</option><option value="beginner">Beginner</option><option value="intermediate">Intermediate</option><option value="advanced">Advanced</option><option value="expert">Expert</option></select>
+            <button type="button" class="remove cvb-row-remove">×</button>
+          </div>
+          {% endfor %}
+        </div>
+        <button type="button" onclick="addSkill()" class="cvb-btn-ghost">+ Add Skill</button>
+        <div class="cvb-inline-form-actions">
+          <button type="button" class="cvb-btn-ghost" onclick="toggleSection('skills')">Cancel</button>
+          <button type="submit" class="cvb-btn-save">Save section</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── EDUCATION CARD ── -->
+    <div class="cvb-section-card" id="card-education">
+      <div class="cvb-card-header-row">
+        <div class="cvb-card-title"><span class="cvb-card-icon">🎓</span><h3>Education</h3></div>
+        <div class="cvb-card-actions">
+          <button type="button" class="cvb-add-btn" onclick="addEducation(); toggleSection('education')">+ Add new</button>
+          <button type="button" class="cvb-edit-btn" onclick="toggleSection('education')">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9.5 2.5l2 2L4 12H2v-2L9.5 2.5z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>
+            Edit
+          </button>
+        </div>
+      </div>
+      <div class="cvb-card-view" id="view-education">
+        {% for edu in cv.educations.all %}
+        <div class="cvb-entry-view">
+          <div class="cvb-entry-view-left">
+            <strong>{{ edu.degree }}{% if edu.field %} in {{ edu.field }}{% endif %}</strong>
+            <span>{{ edu.school }}</span>
+          </div>
+          <span class="cvb-entry-view-dates">{{ edu.start_year }} – {{ edu.end_year }}</span>
+        </div>
+        {% empty %}<p class="cvb-empty-hint">No education added yet.</p>{% endfor %}
+      </div>
+      <div class="cvb-inline-form" id="form-education" style="display:none">
+        <div id="edu-container">
+          {% for edu in cv.educations.all %}
+          <div class="cvb-entry-block">
+            <button type="button" class="remove cvb-entry-remove">×</button>
+            <div class="cvb-grid-2">
+              <div class="cvb-field"><label>School</label><input name="edu_school[]" value="{{ edu.school }}" placeholder="University name"></div>
+              <div class="cvb-field"><label>Degree</label><input name="edu_degree[]" value="{{ edu.degree }}" placeholder="Bachelor's"></div>
+              <div class="cvb-field"><label>Field of Study</label><input name="edu_field[]" value="{{ edu.field }}" placeholder="Computer Science"></div>
+              <div class="cvb-field"></div>
+              <div class="cvb-field"><label>Start Year</label><input name="edu_start[]" value="{{ edu.start_year }}" placeholder="2019"></div>
+              <div class="cvb-field"><label>End Year</label><input name="edu_end[]" value="{{ edu.end_year }}" placeholder="2023"></div>
+            </div>
+            <div class="cvb-field"><label>Description</label><textarea name="edu_desc[]" rows="2" placeholder="Achievements, GPA, activities...">{{ edu.description }}</textarea></div>
+          </div>
+          {% empty %}
+          <div class="cvb-entry-block">
+            <button type="button" class="remove cvb-entry-remove">×</button>
+            <div class="cvb-grid-2">
+              <div class="cvb-field"><label>School</label><input name="edu_school[]" placeholder="University name"></div>
+              <div class="cvb-field"><label>Degree</label><input name="edu_degree[]" placeholder="Bachelor's"></div>
+              <div class="cvb-field"><label>Field of Study</label><input name="edu_field[]" placeholder="Computer Science"></div>
+              <div class="cvb-field"></div>
+              <div class="cvb-field"><label>Start Year</label><input name="edu_start[]" placeholder="2019"></div>
+              <div class="cvb-field"><label>End Year</label><input name="edu_end[]" placeholder="2023"></div>
+            </div>
+            <div class="cvb-field"><label>Description</label><textarea name="edu_desc[]" rows="2" placeholder="Achievements, GPA, activities..."></textarea></div>
+          </div>
+          {% endfor %}
+        </div>
+        <button type="button" onclick="addEducation()" class="cvb-btn-ghost">+ Add Education</button>
+        <div class="cvb-inline-form-actions">
+          <button type="button" class="cvb-btn-ghost" onclick="toggleSection('education')">Cancel</button>
+          <button type="submit" class="cvb-btn-save">Save section</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── EXPERIENCE CARD ── -->
+    <div class="cvb-section-card" id="card-experience">
+      <div class="cvb-card-header-row">
+        <div class="cvb-card-title"><span class="cvb-card-icon">💼</span><h3>Work Experience</h3></div>
+        <div class="cvb-card-actions">
+          <button type="button" class="cvb-add-btn" onclick="addExperience(); toggleSection('experience')">+ Add new</button>
+          <button type="button" class="cvb-edit-btn" onclick="toggleSection('experience')">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9.5 2.5l2 2L4 12H2v-2L9.5 2.5z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>
+            Edit
+          </button>
+        </div>
+      </div>
+      <div class="cvb-card-view" id="view-experience">
+        {% for exp in cv.experiences.all %}
+        <div class="cvb-entry-view">
+          <div class="cvb-entry-view-left">
+            <strong>{{ exp.title }}</strong>
+            <span>{{ exp.company }}{% if exp.location %}, {{ exp.location }}{% endif %}</span>
+          </div>
+          <span class="cvb-entry-view-dates">{{ exp.start_date }} – {% if exp.current %}Present{% else %}{{ exp.end_date }}{% endif %}</span>
+        </div>
+        {% empty %}<p class="cvb-empty-hint">No experience added yet.</p>{% endfor %}
+      </div>
+      <div class="cvb-inline-form" id="form-experience" style="display:none">
+        <div id="exp-container">
+          {% for exp in cv.experiences.all %}
+          <div class="cvb-entry-block">
+            <button type="button" class="remove cvb-entry-remove">×</button>
+            <div class="cvb-grid-2">
+              <div class="cvb-field"><label>Job Title</label><input name="exp_title[]" value="{{ exp.title }}" placeholder="Software Engineer"></div>
+              <div class="cvb-field"><label>Company</label><input name="exp_company[]" value="{{ exp.company }}" placeholder="Acme Corp"></div>
+              <div class="cvb-field"><label>Location</label><input name="exp_location[]" value="{{ exp.location }}" placeholder="Addis Ababa"></div>
+              <div class="cvb-field"></div>
+              <div class="cvb-field"><label>Start Date</label><input name="exp_start[]" value="{{ exp.start_date }}" placeholder="Jan 2022"></div>
+              <div class="cvb-field"><label>End Date</label><input name="exp_end[]" value="{{ exp.end_date }}" placeholder="Dec 2024" {% if exp.current %}disabled{% endif %}></div>
+            </div>
+            <label class="cvb-checkbox"><input type="checkbox" name="exp_current[]" value="{{ forloop.counter0 }}" {% if exp.current %}checked{% endif %} onchange="toggleCurrentJob(this)"> I currently work here</label>
+            <div class="cvb-field"><label>Description</label><textarea name="exp_desc[]" rows="3" placeholder="Key responsibilities and achievements...">{{ exp.description }}</textarea></div>
+          </div>
+          {% empty %}
+          <div class="cvb-entry-block">
+            <button type="button" class="remove cvb-entry-remove">×</button>
+            <div class="cvb-grid-2">
+              <div class="cvb-field"><label>Job Title</label><input name="exp_title[]" placeholder="Software Engineer"></div>
+              <div class="cvb-field"><label>Company</label><input name="exp_company[]" placeholder="Acme Corp"></div>
+              <div class="cvb-field"><label>Location</label><input name="exp_location[]" placeholder="Addis Ababa"></div>
+              <div class="cvb-field"></div>
+              <div class="cvb-field"><label>Start Date</label><input name="exp_start[]" placeholder="Jan 2022"></div>
+              <div class="cvb-field"><label>End Date</label><input name="exp_end[]" placeholder="Dec 2024"></div>
+            </div>
+            <label class="cvb-checkbox"><input type="checkbox" name="exp_current[]" value="0" onchange="toggleCurrentJob(this)"> I currently work here</label>
+            <div class="cvb-field"><label>Description</label><textarea name="exp_desc[]" rows="3" placeholder="Key responsibilities and achievements..."></textarea></div>
+          </div>
+          {% endfor %}
+        </div>
+        <button type="button" onclick="addExperience()" class="cvb-btn-ghost">+ Add Experience</button>
+        <div class="cvb-inline-form-actions">
+          <button type="button" class="cvb-btn-ghost" onclick="toggleSection('experience')">Cancel</button>
+          <button type="submit" class="cvb-btn-save">Save section</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── LANGUAGES CARD ── -->
+    <div class="cvb-section-card" id="card-languages">
+      <div class="cvb-card-header-row">
+        <div class="cvb-card-title"><span class="cvb-card-icon">🌐</span><h3>Languages</h3></div>
+        <div class="cvb-card-actions">
+          <button type="button" class="cvb-add-btn" onclick="addLanguage(); toggleSection('languages')">+ Add new</button>
+          <button type="button" class="cvb-edit-btn" onclick="toggleSection('languages')">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9.5 2.5l2 2L4 12H2v-2L9.5 2.5z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>
+            Edit
+          </button>
+        </div>
+      </div>
+      <div class="cvb-card-view" id="view-languages">
+        {% for lang in cv.languages.all %}
+        <div class="cvb-lang-view-row">
+          <strong>{{ lang.name }}</strong>
+          <div class="cvb-lang-badges">
+            {% if lang.listening %}<span>L: {{ lang.listening }}</span>{% endif %}
+            {% if lang.reading %}<span>R: {{ lang.reading }}</span>{% endif %}
+            {% if lang.writing %}<span>W: {{ lang.writing }}</span>{% endif %}
+            {% if lang.speaking %}<span>S: {{ lang.speaking }}</span>{% endif %}
+          </div>
+        </div>
+        {% empty %}<p class="cvb-empty-hint">No languages added yet.</p>{% endfor %}
+      </div>
+      <div class="cvb-inline-form" id="form-languages" style="display:none">
+        <div id="lang-container">
+          {% for lang in cv.languages.all %}
+          <div class="cvb-entry-block">
+            <button type="button" class="remove cvb-entry-remove">×</button>
+            <div class="cvb-field" style="margin-bottom:10px"><label>Language</label><input name="lang_name[]" value="{{ lang.name }}" placeholder="English"></div>
+            <div class="cvb-lang-grid">
+              <div class="cvb-field"><label>Listening</label><select name="lang_listening[]"><option value="">—</option><option {% if lang.listening == "A1" %}selected{% endif %}>A1</option><option {% if lang.listening == "A2" %}selected{% endif %}>A2</option><option {% if lang.listening == "B1" %}selected{% endif %}>B1</option><option {% if lang.listening == "B2" %}selected{% endif %}>B2</option><option {% if lang.listening == "C1" %}selected{% endif %}>C1</option><option {% if lang.listening == "C2" %}selected{% endif %}>C2</option><option value="native" {% if lang.listening == "native" %}selected{% endif %}>Native</option></select></div>
+              <div class="cvb-field"><label>Reading</label><select name="lang_reading[]"><option value="">—</option><option {% if lang.reading == "A1" %}selected{% endif %}>A1</option><option {% if lang.reading == "A2" %}selected{% endif %}>A2</option><option {% if lang.reading == "B1" %}selected{% endif %}>B1</option><option {% if lang.reading == "B2" %}selected{% endif %}>B2</option><option {% if lang.reading == "C1" %}selected{% endif %}>C1</option><option {% if lang.reading == "C2" %}selected{% endif %}>C2</option><option value="native" {% if lang.reading == "native" %}selected{% endif %}>Native</option></select></div>
+              <div class="cvb-field"><label>Writing</label><select name="lang_writing[]"><option value="">—</option><option {% if lang.writing == "A1" %}selected{% endif %}>A1</option><option {% if lang.writing == "A2" %}selected{% endif %}>A2</option><option {% if lang.writing == "B1" %}selected{% endif %}>B1</option><option {% if lang.writing == "B2" %}selected{% endif %}>B2</option><option {% if lang.writing == "C1" %}selected{% endif %}>C1</option><option {% if lang.writing == "C2" %}selected{% endif %}>C2</option><option value="native" {% if lang.writing == "native" %}selected{% endif %}>Native</option></select></div>
+              <div class="cvb-field"><label>Speaking</label><select name="lang_speaking[]"><option value="">—</option><option {% if lang.speaking == "A1" %}selected{% endif %}>A1</option><option {% if lang.speaking == "A2" %}selected{% endif %}>A2</option><option {% if lang.speaking == "B1" %}selected{% endif %}>B1</option><option {% if lang.speaking == "B2" %}selected{% endif %}>B2</option><option {% if lang.speaking == "C1" %}selected{% endif %}>C1</option><option {% if lang.speaking == "C2" %}selected{% endif %}>C2</option><option value="native" {% if lang.speaking == "native" %}selected{% endif %}>Native</option></select></div>
+            </div>
+          </div>
+          {% empty %}
+          <div class="cvb-entry-block">
+            <button type="button" class="remove cvb-entry-remove">×</button>
+            <div class="cvb-field" style="margin-bottom:10px"><label>Language</label><input name="lang_name[]" placeholder="English"></div>
+            <div class="cvb-lang-grid">
+              <div class="cvb-field"><label>Listening</label><select name="lang_listening[]"><option value="">—</option><option>A1</option><option>A2</option><option>B1</option><option>B2</option><option>C1</option><option>C2</option><option value="native">Native</option></select></div>
+              <div class="cvb-field"><label>Reading</label><select name="lang_reading[]"><option value="">—</option><option>A1</option><option>A2</option><option>B1</option><option>B2</option><option>C1</option><option>C2</option><option value="native">Native</option></select></div>
+              <div class="cvb-field"><label>Writing</label><select name="lang_writing[]"><option value="">—</option><option>A1</option><option>A2</option><option>B1</option><option>B2</option><option>C1</option><option>C2</option><option value="native">Native</option></select></div>
+              <div class="cvb-field"><label>Speaking</label><select name="lang_speaking[]"><option value="">—</option><option>A1</option><option>A2</option><option>B1</option><option>B2</option><option>C1</option><option>C2</option><option value="native">Native</option></select></div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        <button type="button" onclick="addLanguage()" class="cvb-btn-ghost">+ Add Language</button>
+        <div class="cvb-inline-form-actions">
+          <button type="button" class="cvb-btn-ghost" onclick="toggleSection('languages')">Cancel</button>
+          <button type="submit" class="cvb-btn-save">Save section</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── PROJECTS CARD ── -->
+    <div class="cvb-section-card" id="card-projects">
+      <div class="cvb-card-header-row">
+        <div class="cvb-card-title"><span class="cvb-card-icon">🚀</span><h3>Projects</h3></div>
+        <div class="cvb-card-actions">
+          <button type="button" class="cvb-add-btn" onclick="addProject(); toggleSection('projects')">+ Add new</button>
+          <button type="button" class="cvb-edit-btn" onclick="toggleSection('projects')">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9.5 2.5l2 2L4 12H2v-2L9.5 2.5z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>
+            Edit
+          </button>
+        </div>
+      </div>
+      <div class="cvb-card-view" id="view-projects">
+        {% for proj in cv.projects.all %}
+        <div class="cvb-entry-view">
+          <div class="cvb-entry-view-left"><strong>{{ proj.title }}</strong>{% if proj.link %}<span class="cvb-link-hint">{{ proj.link }}</span>{% endif %}</div>
+          {% if proj.start_date %}<span class="cvb-entry-view-dates">{{ proj.start_date }} – {{ proj.end_date }}</span>{% endif %}
+        </div>
+        {% empty %}<p class="cvb-empty-hint">No projects added yet.</p>{% endfor %}
+      </div>
+      <div class="cvb-inline-form" id="form-projects" style="display:none">
+        <div id="proj-container">
+          {% for proj in cv.projects.all %}
+          <div class="cvb-entry-block">
+            <button type="button" class="remove cvb-entry-remove">×</button>
+            <div class="cvb-grid-2">
+              <div class="cvb-field"><label>Title</label><input name="proj_title[]" value="{{ proj.title }}" placeholder="My Project"></div>
+              <div class="cvb-field"><label>Link</label><input name="proj_link[]" value="{{ proj.link }}" placeholder="https://github.com/..."></div>
+              <div class="cvb-field"><label>Start</label><input name="proj_start[]" value="{{ proj.start_date }}" placeholder="Jan 2023"></div>
+              <div class="cvb-field"><label>End</label><input name="proj_end[]" value="{{ proj.end_date }}" placeholder="Mar 2023"></div>
+            </div>
+            <div class="cvb-field"><label>Description</label><textarea name="proj_desc[]" rows="2">{{ proj.description }}</textarea></div>
+          </div>
+          {% empty %}
+          <div class="cvb-entry-block">
+            <button type="button" class="remove cvb-entry-remove">×</button>
+            <div class="cvb-grid-2">
+              <div class="cvb-field"><label>Title</label><input name="proj_title[]" placeholder="My Project"></div>
+              <div class="cvb-field"><label>Link</label><input name="proj_link[]" placeholder="https://github.com/..."></div>
+              <div class="cvb-field"><label>Start</label><input name="proj_start[]" placeholder="Jan 2023"></div>
+              <div class="cvb-field"><label>End</label><input name="proj_end[]" placeholder="Mar 2023"></div>
+            </div>
+            <div class="cvb-field"><label>Description</label><textarea name="proj_desc[]" rows="2" placeholder="What did you build?"></textarea></div>
+          </div>
+          {% endfor %}
+        </div>
+        <button type="button" onclick="addProject()" class="cvb-btn-ghost">+ Add Project</button>
+        <div class="cvb-inline-form-actions">
+          <button type="button" class="cvb-btn-ghost" onclick="toggleSection('projects')">Cancel</button>
+          <button type="submit" class="cvb-btn-save">Save section</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── CERTIFICATIONS CARD ── -->
+    <div class="cvb-section-card" id="card-certifications">
+      <div class="cvb-card-header-row">
+        <div class="cvb-card-title"><span class="cvb-card-icon">🏅</span><h3>Certifications</h3></div>
+        <div class="cvb-card-actions">
+          <button type="button" class="cvb-add-btn" onclick="addCertification(); toggleSection('certifications')">+ Add new</button>
+          <button type="button" class="cvb-edit-btn" onclick="toggleSection('certifications')">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9.5 2.5l2 2L4 12H2v-2L9.5 2.5z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>
+            Edit
+          </button>
+        </div>
+      </div>
+      <div class="cvb-card-view" id="view-certifications">
+        {% for cert in cv.certifications.all %}
+        <div class="cvb-entry-view">
+          <div class="cvb-entry-view-left"><strong>{{ cert.name }}</strong>{% if cert.organization %}<span>{{ cert.organization }}</span>{% endif %}</div>
+          {% if cert.year %}<span class="cvb-entry-view-dates">{{ cert.year }}</span>{% endif %}
+        </div>
+        {% empty %}<p class="cvb-empty-hint">No certifications added yet.</p>{% endfor %}
+      </div>
+      <div class="cvb-inline-form" id="form-certifications" style="display:none">
+        <div id="cert-container">
+          {% for cert in cv.certifications.all %}
+          <div class="cvb-entry-block">
+            <button type="button" class="remove cvb-entry-remove">×</button>
+            <div class="cvb-grid-2">
+              <div class="cvb-field"><label>Name</label><input name="cert_name[]" value="{{ cert.name }}" placeholder="AWS Solutions Architect"></div>
+              <div class="cvb-field"><label>Organization</label><input name="cert_org[]" value="{{ cert.organization }}" placeholder="Amazon"></div>
+              <div class="cvb-field"><label>Year</label><input name="cert_year[]" value="{{ cert.year }}" placeholder="2024"></div>
+              <div class="cvb-field"><label>Link</label><input name="cert_link[]" value="{{ cert.link }}" placeholder="https://..."></div>
+            </div>
+          </div>
+          {% empty %}
+          <div class="cvb-entry-block">
+            <button type="button" class="remove cvb-entry-remove">×</button>
+            <div class="cvb-grid-2">
+              <div class="cvb-field"><label>Name</label><input name="cert_name[]" placeholder="AWS Solutions Architect"></div>
+              <div class="cvb-field"><label>Organization</label><input name="cert_org[]" placeholder="Amazon"></div>
+              <div class="cvb-field"><label>Year</label><input name="cert_year[]" placeholder="2024"></div>
+              <div class="cvb-field"><label>Link</label><input name="cert_link[]" placeholder="https://..."></div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        <button type="button" onclick="addCertification()" class="cvb-btn-ghost">+ Add Certification</button>
+        <div class="cvb-inline-form-actions">
+          <button type="button" class="cvb-btn-ghost" onclick="toggleSection('certifications')">Cancel</button>
+          <button type="submit" class="cvb-btn-save">Save section</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── REFERENCES CARD ── -->
+    <div class="cvb-section-card" id="card-references">
+      <div class="cvb-card-header-row">
+        <div class="cvb-card-title"><span class="cvb-card-icon">👥</span><h3>References</h3></div>
+        <div class="cvb-card-actions">
+          <button type="button" class="cvb-add-btn" onclick="addReference(); toggleSection('references')">+ Add new</button>
+          <button type="button" class="cvb-edit-btn" onclick="toggleSection('references')">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9.5 2.5l2 2L4 12H2v-2L9.5 2.5z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>
+            Edit
+          </button>
+        </div>
+      </div>
+      <div class="cvb-card-view" id="view-references">
+        {% for ref in cv.references.all %}
+        <div class="cvb-entry-view">
+          <div class="cvb-entry-view-left"><strong>{{ ref.name }}</strong>{% if ref.position %}<span>{{ ref.position }}{% if ref.company %} · {{ ref.company }}{% endif %}</span>{% endif %}</div>
+          {% if ref.email %}<span class="cvb-entry-view-dates">{{ ref.email }}</span>{% endif %}
+        </div>
+        {% empty %}<p class="cvb-empty-hint">No references added yet.</p>{% endfor %}
+      </div>
+      <div class="cvb-inline-form" id="form-references" style="display:none">
+        <div id="ref-container">
+          {% for ref in cv.references.all %}
+          <div class="cvb-entry-block">
+            <button type="button" class="remove cvb-entry-remove">×</button>
+            <div class="cvb-grid-2">
+              <div class="cvb-field"><label>Name</label><input name="ref_name[]" value="{{ ref.name }}" placeholder="Jane Smith"></div>
+              <div class="cvb-field"><label>Position</label><input name="ref_position[]" value="{{ ref.position }}" placeholder="Senior Manager"></div>
+              <div class="cvb-field"><label>Company</label><input name="ref_company[]" value="{{ ref.company }}" placeholder="Acme Corp"></div>
+              <div class="cvb-field"><label>Email</label><input name="ref_email[]" value="{{ ref.email }}" placeholder="jane@acme.com"></div>
+              <div class="cvb-field"><label>Phone</label><input name="ref_phone[]" value="{{ ref.phone }}" placeholder="+251 91 234 5678"></div>
+            </div>
+          </div>
+          {% empty %}
+          <div class="cvb-entry-block">
+            <button type="button" class="remove cvb-entry-remove">×</button>
+            <div class="cvb-grid-2">
+              <div class="cvb-field"><label>Name</label><input name="ref_name[]" placeholder="Jane Smith"></div>
+              <div class="cvb-field"><label>Position</label><input name="ref_position[]" placeholder="Senior Manager"></div>
+              <div class="cvb-field"><label>Company</label><input name="ref_company[]" placeholder="Acme Corp"></div>
+              <div class="cvb-field"><label>Email</label><input name="ref_email[]" placeholder="jane@acme.com"></div>
+              <div class="cvb-field"><label>Phone</label><input name="ref_phone[]" placeholder="+251 91 234 5678"></div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        <button type="button" onclick="addReference()" class="cvb-btn-ghost">+ Add Reference</button>
+        <div class="cvb-inline-form-actions">
+          <button type="button" class="cvb-btn-ghost" onclick="toggleSection('references')">Cancel</button>
+          <button type="submit" class="cvb-btn-save">Save section</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── BOTTOM NAV ── -->
+    <div class="cvb-bottom-nav">
+      <a href="?step=1" class="cvb-btn-ghost">← Back</a>
+      <button type="submit" class="cvb-btn-primary">
+        Next: Choose Template
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10m0 0l-4-4m4 4l-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+
+    </form>
+  </div>
+
+  <!-- ══════════════════ STEP 3: TEMPLATE ══════════════════ -->
+  {% elif step == "3" %}
+  <div class="cvb-template-page">
+    <form method="POST">
+      {% csrf_token %}
+
+      <div class="cvb-section-card">
+        <div class="cvb-card-header"><span class="cvb-card-icon">🎨</span><h3>Choose Template</h3></div>
+        <div class="cvb-template-grid">
+          {% for value, label in templates %}
+          <label class="cvb-tpl-card {% if cv.template == value %}selected{% endif %}">
+            <input type="radio" name="template" value="{{ value }}" {% if cv.template == value %}checked{% endif %} hidden>
+            <div class="cvb-tpl-thumb cvb-tpl-{{ value }}">
+              <div class="cvb-tpl-header"></div>
+              <div class="cvb-tpl-lines"><div></div><div></div><div></div><div></div></div>
+            </div>
+            <span>{{ label }}</span>
+          </label>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="cvb-section-card">
+        <div class="cvb-card-header"><span class="cvb-card-icon">🎨</span><h3>Accent Color</h3></div>
+        <div class="cvb-palette">
+          {% for color in color_palettes %}
+          <label class="cvb-swatch {% if cv.color == color %}selected{% endif %}" style="background:{{ color }}">
+            <input type="radio" name="color" value="{{ color }}" {% if cv.color == color %}checked{% endif %} hidden>
+          </label>
+          {% endfor %}
+        </div>
+        <div class="cvb-custom-color">
+          <label>Custom</label>
+          <input type="color" name="color_custom" id="color-picker" value="{{ cv.color }}">
+          <span id="color-hex">{{ cv.color }}</span>
+        </div>
+      </div>
+
+      <div class="cvb-section-card">
+        <div class="cvb-card-header"><span class="cvb-card-icon">🔠</span><h3>Font Size</h3></div>
+        <div class="cvb-font-row">
+          {% for value, label in font_sizes %}
+          <label class="cvb-font-opt {% if cv.font_size == value %}selected{% endif %}">
+            <input type="radio" name="font_size" value="{{ value }}" {% if cv.font_size == value %}checked{% endif %} hidden>
+            {{ label }}
+          </label>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="cvb-bottom-nav">
+        <a href="?step=2" class="cvb-btn-ghost">← Back</a>
+        <button type="submit" class="cvb-btn-primary">
+          Next: Download →
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10m0 0l-4-4m4 4l-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- ══════════════════ STEP 4: DOWNLOAD ══════════════════ -->
+  {% elif step == "4" %}
+  <div class="cvb-done-page">
+    <div class="cvb-done-card">
+      <div class="cvb-done-emoji">🎉</div>
+      <h2 class="cvb-done-title">Your CV is ready!</h2>
+      <p class="cvb-done-sub">Download it as a PDF or go back to make changes.</p>
+      <a href="{% url 'download_cv' %}" class="cvb-btn-primary cvb-btn-full cvb-btn-download">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 3v9m0 0l-3-3m3 3l3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 14h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        Download PDF
+      </a>
+      <div class="cvb-done-links">
+        <a href="?step=2" class="cvb-btn-ghost">✏ Edit Content</a>
+        <a href="?step=3" class="cvb-btn-ghost">🎨 Change Template</a>
+      </div>
+    </div>
+
+    <div class="cvb-done-preview">
+      <p class="cvb-done-preview-label">Preview</p>
+      {% include "jobs/cv_preview.html" with cv=cv %}
+    </div>
+  </div>
+  {% endif %}
+
+</div>
+
+<div id="autosave-toast"></div>
+
+<script src="{% static 'js/cv_builder.js' %}"></script>
+<script src="{% static 'js/cv_suggestions.js' %}"></script>
+{% endblock %}

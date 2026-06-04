@@ -1,0 +1,539 @@
+{% load static %}
+
+{% if cv.template == "modern" %}
+<!-- ═══════════════════════════════════════════
+     MODERN — Two column, sidebar left
+═══════════════════════════════════════════ -->
+<div class="cvp cvp-modern" style="--accent: {{ cv.color|default:'#4ca1af' }};" data-fontsize="{{ cv.font_size|default:'medium' }}">
+  <div class="cvp-modern-wrap">
+
+    <!-- SIDEBAR -->
+    <div class="cvp-modern-sidebar">
+      {% if cv.profile_image %}
+      <img src="{{ cv.profile_image.url }}" class="cvp-modern-photo" alt="Profile">
+      {% else %}
+      <div class="cvp-modern-photo cvp-modern-photo-empty">👤</div>
+      {% endif %}
+
+      <h1 class="cvp-modern-name">{{ cv.full_name|default:"Your Name" }}</h1>
+
+      <div class="cvp-modern-section">
+        <div class="cvp-modern-section-title">Contact</div>
+        {% if cv.email %}<div class="cvp-modern-contact-item">✉ {{ cv.email }}</div>{% endif %}
+        {% if cv.phone %}<div class="cvp-modern-contact-item">📞 {{ cv.phone }}</div>{% endif %}
+        {% if cv.address %}<div class="cvp-modern-contact-item">📍 {{ cv.address }}</div>{% endif %}
+        {% if cv.website and cv.website != "None" %}<div class="cvp-modern-contact-item">🌐 {{ cv.website }}</div>{% endif %}
+        {% if cv.linkedin and cv.linkedin != "None" %}<div class="cvp-modern-contact-item">in {{ cv.linkedin }}</div>{% endif %}
+        {% if cv.github and cv.github != "None" %}<div class="cvp-modern-contact-item">⌨ {{ cv.github }}</div>{% endif %}
+      </div>
+
+      {% if cv.skills_list.exists %}
+      <div class="cvp-modern-section">
+        <div class="cvp-modern-section-title">Skills</div>
+        {% for s in cv.skills_list.all %}
+        <div class="cvp-modern-skill">
+          <span>{{ s.name }}</span>
+          {% if s.level %}<div class="cvp-modern-skill-bar"><div class="cvp-modern-skill-fill cvp-skill-{{ s.level }}"></div></div>{% endif %}
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      {% if cv.languages.exists %}
+      <div class="cvp-modern-section">
+        <div class="cvp-modern-section-title">Languages</div>
+        {% for lang in cv.languages.all %}
+        <div class="cvp-modern-lang">
+          <strong>{{ lang.name }}</strong>
+          <div class="cvp-modern-lang-levels">
+            {% if lang.listening %}<span>L:{{ lang.listening }}</span>{% endif %}
+            {% if lang.speaking %}<span>S:{{ lang.speaking }}</span>{% endif %}
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- MAIN -->
+    <div class="cvp-modern-main">
+      {% if cv.summary %}
+      <div class="cvp-modern-block">
+        <div class="cvp-modern-title">Profile</div>
+        <p class="cvp-modern-body">{{ cv.summary }}</p>
+      </div>
+      {% endif %}
+
+      {% if cv.experiences.exists %}
+      <div class="cvp-modern-block">
+        <div class="cvp-modern-title">Experience</div>
+        {% for exp in cv.experiences.all %}
+        <div class="cvp-modern-entry">
+          <div class="cvp-modern-entry-head">
+            <strong>{{ exp.title }}</strong>
+            <span>{{ exp.start_date }} – {% if exp.current %}Present{% else %}{{ exp.end_date }}{% endif %}</span>
+          </div>
+          <div class="cvp-modern-entry-sub">{{ exp.company }}{% if exp.location %}, {{ exp.location }}{% endif %}</div>
+          {% if exp.description %}<p class="cvp-modern-body">{{ exp.description }}</p>{% endif %}
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      {% if cv.educations.exists %}
+      <div class="cvp-modern-block">
+        <div class="cvp-modern-title">Education</div>
+        {% for edu in cv.educations.all %}
+        <div class="cvp-modern-entry">
+          <div class="cvp-modern-entry-head">
+            <strong>{{ edu.degree }}{% if edu.field %} in {{ edu.field }}{% endif %}</strong>
+            <span>{{ edu.start_year }} – {{ edu.end_year }}</span>
+          </div>
+          <div class="cvp-modern-entry-sub">{{ edu.school }}</div>
+          {% if edu.description %}<p class="cvp-modern-body">{{ edu.description }}</p>{% endif %}
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      {% if cv.projects.exists %}
+      <div class="cvp-modern-block">
+        <div class="cvp-modern-title">Projects</div>
+        {% for proj in cv.projects.all %}
+        <div class="cvp-modern-entry">
+          <div class="cvp-modern-entry-head">
+            <strong>{{ proj.title }}</strong>
+            {% if proj.start_date %}<span>{{ proj.start_date }} – {{ proj.end_date }}</span>{% endif %}
+          </div>
+          {% if proj.link %}<div class="cvp-modern-entry-sub">{{ proj.link }}</div>{% endif %}
+          {% if proj.description %}<p class="cvp-modern-body">{{ proj.description }}</p>{% endif %}
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      {% if cv.certifications.exists %}
+      <div class="cvp-modern-block">
+        <div class="cvp-modern-title">Certifications</div>
+        {% for cert in cv.certifications.all %}
+        <div class="cvp-modern-entry">
+          <div class="cvp-modern-entry-head">
+            <strong>{{ cert.name }}</strong>
+            {% if cert.year %}<span>{{ cert.year }}</span>{% endif %}
+          </div>
+          {% if cert.organization %}<div class="cvp-modern-entry-sub">{{ cert.organization }}</div>{% endif %}
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      {% if cv.references.exists %}
+      <div class="cvp-modern-block">
+        <div class="cvp-modern-title">References</div>
+        <div class="cvp-modern-ref-grid">
+        {% for ref in cv.references.all %}
+        <div class="cvp-modern-ref">
+          <strong>{{ ref.name }}</strong>
+          {% if ref.position %}<div>{{ ref.position }}</div>{% endif %}
+          {% if ref.company %}<div>{{ ref.company }}</div>{% endif %}
+          {% if ref.email %}<div>{{ ref.email }}</div>{% endif %}
+        </div>
+        {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% elif cv.template == "classic" %}
+<!-- ═══════════════════════════════════════════
+     CLASSIC — Centered header, serif, elegant
+═══════════════════════════════════════════ -->
+<div class="cvp cvp-classic" style="--accent: {{ cv.color|default:'#2c3e50' }};" data-fontsize="{{ cv.font_size|default:'medium' }}">
+
+  <div class="cvp-classic-header">
+    {% if cv.profile_image %}<img src="{{ cv.profile_image.url }}" class="cvp-classic-photo" alt="Profile">{% endif %}
+    <h1 class="cvp-classic-name">{{ cv.full_name|default:"Your Name" }}</h1>
+    <div class="cvp-classic-rule"></div>
+    <div class="cvp-classic-contacts">
+      {% if cv.email %}<span>{{ cv.email }}</span>{% endif %}
+      {% if cv.phone %}<span>{{ cv.phone }}</span>{% endif %}
+      {% if cv.address %}<span>{{ cv.address }}</span>{% endif %}
+      {% if cv.website and cv.website != "None" %}<span>{{ cv.website }}</span>{% endif %}
+      {% if cv.linkedin and cv.linkedin != "None" %}<span>{{ cv.linkedin }}</span>{% endif %}
+    </div>
+    <div class="cvp-classic-rule"></div>
+  </div>
+
+  {% if cv.summary %}
+  <div class="cvp-classic-section">
+    <h2 class="cvp-classic-section-title">Professional Summary</h2>
+    <p class="cvp-classic-body">{{ cv.summary }}</p>
+  </div>
+  {% endif %}
+
+  {% if cv.experiences.exists %}
+  <div class="cvp-classic-section">
+    <h2 class="cvp-classic-section-title">Work Experience</h2>
+    {% for exp in cv.experiences.all %}
+    <div class="cvp-classic-entry">
+      <div class="cvp-classic-entry-head">
+        <span class="cvp-classic-entry-title">{{ exp.title }}</span>
+        <span class="cvp-classic-entry-dates">{{ exp.start_date }} – {% if exp.current %}Present{% else %}{{ exp.end_date }}{% endif %}</span>
+      </div>
+      <div class="cvp-classic-entry-sub">{{ exp.company }}{% if exp.location %} · {{ exp.location }}{% endif %}</div>
+      {% if exp.description %}<p class="cvp-classic-body">{{ exp.description }}</p>{% endif %}
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  {% if cv.educations.exists %}
+  <div class="cvp-classic-section">
+    <h2 class="cvp-classic-section-title">Education</h2>
+    {% for edu in cv.educations.all %}
+    <div class="cvp-classic-entry">
+      <div class="cvp-classic-entry-head">
+        <span class="cvp-classic-entry-title">{{ edu.degree }}{% if edu.field %} in {{ edu.field }}{% endif %}</span>
+        <span class="cvp-classic-entry-dates">{{ edu.start_year }} – {{ edu.end_year }}</span>
+      </div>
+      <div class="cvp-classic-entry-sub">{{ edu.school }}</div>
+      {% if edu.description %}<p class="cvp-classic-body">{{ edu.description }}</p>{% endif %}
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  {% if cv.skills_list.exists %}
+  <div class="cvp-classic-section">
+    <h2 class="cvp-classic-section-title">Skills</h2>
+    <div class="cvp-classic-skills">
+      {% for s in cv.skills_list.all %}
+      <span class="cvp-classic-skill">{{ s.name }}{% if s.level %} ({{ s.level }}){% endif %}</span>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+  {% if cv.languages.exists %}
+  <div class="cvp-classic-section">
+    <h2 class="cvp-classic-section-title">Languages</h2>
+    {% for lang in cv.languages.all %}
+    <div class="cvp-classic-lang">
+      <strong>{{ lang.name }}</strong>
+      {% if lang.listening %} — Listening: {{ lang.listening }}{% endif %}
+      {% if lang.reading %}, Reading: {{ lang.reading }}{% endif %}
+      {% if lang.writing %}, Writing: {{ lang.writing }}{% endif %}
+      {% if lang.speaking %}, Speaking: {{ lang.speaking }}{% endif %}
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  {% if cv.certifications.exists %}
+  <div class="cvp-classic-section">
+    <h2 class="cvp-classic-section-title">Certifications</h2>
+    {% for cert in cv.certifications.all %}
+    <div class="cvp-classic-entry">
+      <div class="cvp-classic-entry-head">
+        <span class="cvp-classic-entry-title">{{ cert.name }}</span>
+        {% if cert.year %}<span class="cvp-classic-entry-dates">{{ cert.year }}</span>{% endif %}
+      </div>
+      {% if cert.organization %}<div class="cvp-classic-entry-sub">{{ cert.organization }}</div>{% endif %}
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  {% if cv.references.exists %}
+  <div class="cvp-classic-section">
+    <h2 class="cvp-classic-section-title">References</h2>
+    <div class="cvp-classic-ref-grid">
+    {% for ref in cv.references.all %}
+    <div class="cvp-classic-ref">
+      <strong>{{ ref.name }}</strong>
+      {% if ref.position %}<div>{{ ref.position }}</div>{% endif %}
+      {% if ref.company %}<div>{{ ref.company }}</div>{% endif %}
+      {% if ref.email %}<div>{{ ref.email }}</div>{% endif %}
+    </div>
+    {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+</div>
+
+{% elif cv.template == "dark" %}
+<!-- ═══════════════════════════════════════════
+     DARK — Developer portfolio style
+═══════════════════════════════════════════ -->
+<div class="cvp cvp-dark" style="--accent: {{ cv.color|default:'#4ca1af' }};" data-fontsize="{{ cv.font_size|default:'medium' }}">
+
+  <div class="cvp-dark-header">
+    <div class="cvp-dark-header-left">
+      {% if cv.profile_image %}
+      <img src="{{ cv.profile_image.url }}" class="cvp-dark-photo" alt="Profile">
+      {% endif %}
+      <div>
+        <h1 class="cvp-dark-name">{{ cv.full_name|default:"Your Name" }}</h1>
+        <div class="cvp-dark-contacts">
+          {% if cv.email %}<span>{{ cv.email }}</span>{% endif %}
+          {% if cv.phone %}<span>{{ cv.phone }}</span>{% endif %}
+          {% if cv.address %}<span>{{ cv.address }}</span>{% endif %}
+          {% if cv.github and cv.github != "None" %}<span>{{ cv.github }}</span>{% endif %}
+          {% if cv.linkedin and cv.linkedin != "None" %}<span>{{ cv.linkedin }}</span>{% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% if cv.summary %}
+  <div class="cvp-dark-section">
+    <div class="cvp-dark-section-title"><span>//</span> About</div>
+    <p class="cvp-dark-body">{{ cv.summary }}</p>
+  </div>
+  {% endif %}
+
+  {% if cv.skills_list.exists %}
+  <div class="cvp-dark-section">
+    <div class="cvp-dark-section-title"><span>//</span> Skills</div>
+    <div class="cvp-dark-skills">
+      {% for s in cv.skills_list.all %}
+      <span class="cvp-dark-skill-tag">{{ s.name }}</span>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+  {% if cv.experiences.exists %}
+  <div class="cvp-dark-section">
+    <div class="cvp-dark-section-title"><span>//</span> Experience</div>
+    {% for exp in cv.experiences.all %}
+    <div class="cvp-dark-entry">
+      <div class="cvp-dark-entry-dot"></div>
+      <div class="cvp-dark-entry-content">
+        <div class="cvp-dark-entry-head">
+          <strong>{{ exp.title }}</strong>
+          <span class="cvp-dark-dates">{{ exp.start_date }} – {% if exp.current %}Present{% else %}{{ exp.end_date }}{% endif %}</span>
+        </div>
+        <div class="cvp-dark-entry-sub">{{ exp.company }}{% if exp.location %} · {{ exp.location }}{% endif %}</div>
+        {% if exp.description %}<p class="cvp-dark-body">{{ exp.description }}</p>{% endif %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  {% if cv.educations.exists %}
+  <div class="cvp-dark-section">
+    <div class="cvp-dark-section-title"><span>//</span> Education</div>
+    {% for edu in cv.educations.all %}
+    <div class="cvp-dark-entry">
+      <div class="cvp-dark-entry-dot"></div>
+      <div class="cvp-dark-entry-content">
+        <div class="cvp-dark-entry-head">
+          <strong>{{ edu.degree }}{% if edu.field %} in {{ edu.field }}{% endif %}</strong>
+          <span class="cvp-dark-dates">{{ edu.start_year }} – {{ edu.end_year }}</span>
+        </div>
+        <div class="cvp-dark-entry-sub">{{ edu.school }}</div>
+        {% if edu.description %}<p class="cvp-dark-body">{{ edu.description }}</p>{% endif %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  {% if cv.projects.exists %}
+  <div class="cvp-dark-section">
+    <div class="cvp-dark-section-title"><span>//</span> Projects</div>
+    {% for proj in cv.projects.all %}
+    <div class="cvp-dark-project">
+      <div class="cvp-dark-project-head">
+        <strong>{{ proj.title }}</strong>
+        {% if proj.link %}<a class="cvp-dark-link">{{ proj.link }}</a>{% endif %}
+      </div>
+      {% if proj.description %}<p class="cvp-dark-body">{{ proj.description }}</p>{% endif %}
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  {% if cv.languages.exists %}
+  <div class="cvp-dark-section">
+    <div class="cvp-dark-section-title"><span>//</span> Languages</div>
+    <div class="cvp-dark-lang-grid">
+      {% for lang in cv.languages.all %}
+      <div class="cvp-dark-lang">
+        <strong>{{ lang.name }}</strong>
+        <div class="cvp-dark-lang-levels">
+          {% if lang.listening %}<span>L:{{ lang.listening }}</span>{% endif %}
+          {% if lang.reading %}<span>R:{{ lang.reading }}</span>{% endif %}
+          {% if lang.writing %}<span>W:{{ lang.writing }}</span>{% endif %}
+          {% if lang.speaking %}<span>S:{{ lang.speaking }}</span>{% endif %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+  {% if cv.certifications.exists %}
+  <div class="cvp-dark-section">
+    <div class="cvp-dark-section-title"><span>//</span> Certifications</div>
+    {% for cert in cv.certifications.all %}
+    <div class="cvp-dark-cert">
+      <strong>{{ cert.name }}</strong>
+      {% if cert.organization %}<span> · {{ cert.organization }}</span>{% endif %}
+      {% if cert.year %}<span class="cvp-dark-dates"> ({{ cert.year }})</span>{% endif %}
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+</div>
+
+{% else %}
+<!-- ═══════════════════════════════════════════
+     EUROPASS — Official EU format
+═══════════════════════════════════════════ -->
+<div class="cvp cvp-europass" style="--accent: {{ cv.color|default:'#003399' }};" data-fontsize="{{ cv.font_size|default:'medium' }}">
+
+  <!-- EUROPASS HEADER BAND -->
+  <div class="cvp-euro-header">
+    <div class="cvp-euro-header-inner">
+      {% if cv.profile_image %}
+      <img src="{{ cv.profile_image.url }}" class="cvp-euro-photo" alt="Profile">
+      {% endif %}
+      <div class="cvp-euro-header-text">
+        <div class="cvp-euro-label">Curriculum Vitae</div>
+        <h1 class="cvp-euro-name">{{ cv.full_name|default:"Your Name" }}</h1>
+      </div>
+    </div>
+  </div>
+
+  <div class="cvp-euro-body">
+
+    <!-- PERSONAL INFO TABLE -->
+    <div class="cvp-euro-section">
+      <div class="cvp-euro-section-title">Personal Information</div>
+      <table class="cvp-euro-table">
+        {% if cv.address %}<tr><td class="cvp-euro-td-label">Address</td><td>{{ cv.address }}</td></tr>{% endif %}
+        {% if cv.phone %}<tr><td class="cvp-euro-td-label">Phone</td><td>{{ cv.phone }}</td></tr>{% endif %}
+        {% if cv.email %}<tr><td class="cvp-euro-td-label">Email</td><td>{{ cv.email }}</td></tr>{% endif %}
+        {% if cv.website and cv.website != "None" %}<tr><td class="cvp-euro-td-label">Website</td><td>{{ cv.website }}</td></tr>{% endif %}
+        {% if cv.linkedin and cv.linkedin != "None" %}<tr><td class="cvp-euro-td-label">LinkedIn</td><td>{{ cv.linkedin }}</td></tr>{% endif %}
+        {% if cv.nationality %}<tr><td class="cvp-euro-td-label">Nationality</td><td>{{ cv.nationality }}</td></tr>{% endif %}
+        {% if cv.date_of_birth %}<tr><td class="cvp-euro-td-label">Date of Birth</td><td>{{ cv.date_of_birth }}</td></tr>{% endif %}
+      </table>
+    </div>
+
+    {% if cv.summary %}
+    <div class="cvp-euro-section">
+      <div class="cvp-euro-section-title">Personal Statement</div>
+      <p class="cvp-euro-body">{{ cv.summary }}</p>
+    </div>
+    {% endif %}
+
+    {% if cv.experiences.exists %}
+    <div class="cvp-euro-section">
+      <div class="cvp-euro-section-title">Work Experience</div>
+      {% for exp in cv.experiences.all %}
+      <div class="cvp-euro-entry">
+        <div class="cvp-euro-entry-dates">{{ exp.start_date }} –<br>{% if exp.current %}Present{% else %}{{ exp.end_date }}{% endif %}</div>
+        <div class="cvp-euro-entry-content">
+          <strong>{{ exp.title }}</strong>
+          <div class="cvp-euro-entry-org">{{ exp.company }}{% if exp.location %}, {{ exp.location }}{% endif %}</div>
+          {% if exp.description %}<p class="cvp-euro-body">{{ exp.description }}</p>{% endif %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if cv.educations.exists %}
+    <div class="cvp-euro-section">
+      <div class="cvp-euro-section-title">Education and Training</div>
+      {% for edu in cv.educations.all %}
+      <div class="cvp-euro-entry">
+        <div class="cvp-euro-entry-dates">{{ edu.start_year }} –<br>{{ edu.end_year }}</div>
+        <div class="cvp-euro-entry-content">
+          <strong>{{ edu.degree }}{% if edu.field %} in {{ edu.field }}{% endif %}</strong>
+          <div class="cvp-euro-entry-org">{{ edu.school }}</div>
+          {% if edu.description %}<p class="cvp-euro-body">{{ edu.description }}</p>{% endif %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if cv.skills_list.exists %}
+    <div class="cvp-euro-section">
+      <div class="cvp-euro-section-title">Skills</div>
+      <div class="cvp-euro-skills">
+        {% for s in cv.skills_list.all %}
+        <span class="cvp-euro-skill">{{ s.name }}{% if s.level %} · {{ s.level }}{% endif %}</span>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
+    {% if cv.languages.exists %}
+    <div class="cvp-euro-section">
+      <div class="cvp-euro-section-title">Language Skills</div>
+      <table class="cvp-euro-lang-table">
+        <thead>
+          <tr>
+            <th>Language</th><th>Listening</th><th>Reading</th><th>Writing</th><th>Speaking</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for lang in cv.languages.all %}
+          <tr>
+            <td><strong>{{ lang.name }}</strong></td>
+            <td>{{ lang.listening }}</td>
+            <td>{{ lang.reading }}</td>
+            <td>{{ lang.writing }}</td>
+            <td>{{ lang.speaking }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% endif %}
+
+    {% if cv.certifications.exists %}
+    <div class="cvp-euro-section">
+      <div class="cvp-euro-section-title">Courses and Certifications</div>
+      {% for cert in cv.certifications.all %}
+      <div class="cvp-euro-entry">
+        {% if cert.year %}<div class="cvp-euro-entry-dates">{{ cert.year }}</div>{% endif %}
+        <div class="cvp-euro-entry-content">
+          <strong>{{ cert.name }}</strong>
+          {% if cert.organization %}<div class="cvp-euro-entry-org">{{ cert.organization }}</div>{% endif %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if cv.references.exists %}
+    <div class="cvp-euro-section">
+      <div class="cvp-euro-section-title">References</div>
+      <div class="cvp-euro-ref-grid">
+        {% for ref in cv.references.all %}
+        <div class="cvp-euro-ref">
+          <strong>{{ ref.name }}</strong>
+          {% if ref.position %}<div>{{ ref.position }}</div>{% endif %}
+          {% if ref.company %}<div>{{ ref.company }}</div>{% endif %}
+          {% if ref.email %}<div>{{ ref.email }}</div>{% endif %}
+          {% if ref.phone %}<div>{{ ref.phone }}</div>{% endif %}
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
+  </div>
+</div>
+{% endif %}

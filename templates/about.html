@@ -1,0 +1,233 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+
+/* HERO */
+.about-hero {
+    background: linear-gradient(to right, #2c3e50, #4ca1af);
+    color: white;
+    padding: 80px 20px;
+    text-align: center;
+    border-radius: 12px;
+}
+
+.about-hero h2 {
+    font-size: 36px;
+    font-weight: 700;
+}
+
+.about-hero p {
+    font-size: 16px;
+    opacity: 0.9;
+}
+
+/* SECTION CONTAINER */
+.section-box {
+    max-width: 1000px;
+    margin: -50px auto 40px;
+    background: white;
+    padding: 40px;
+    border-radius: 14px;
+    box-shadow: 0 10px 35px rgba(0,0,0,0.1);
+    animation: fadeInUp 0.6s ease;
+}
+
+/* TEXT */
+.section-box h3 {
+    color: #2c3e50;
+    margin-bottom: 10px;
+}
+
+.section-box p {
+    color: #555;
+    font-size: 15px;
+    line-height: 1.7;
+}
+
+/* STATS */
+.stats {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+    text-align: center;
+    flex-wrap: wrap;
+}
+
+.stat {
+    flex: 1;
+    min-width: 150px;
+    margin: 10px 0;
+}
+
+.stat h2 {
+    color: #4ca1af;
+    font-size: 28px;
+}
+
+.stat p {
+    font-size: 13px;
+    color: #777;
+}
+
+/* FEATURES */
+.features {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-top: 30px;
+}
+
+.feature-box {
+    flex: 1;
+    min-width: 250px;
+    background: #f1f5f9;
+    padding: 25px;
+    border-radius: 12px;
+    text-align: center;
+    transition: 0.3s;
+}
+
+.feature-box:hover {
+    transform: translateY(-6px);
+    background: #e2e8f0;
+}
+
+.feature-box i {
+    font-size: 30px;
+    color: #4ca1af;
+    margin-bottom: 10px;
+}
+
+/* CTA */
+.cta-box {
+    text-align: center;
+    margin-top: 40px;
+    padding: 30px;
+    border-radius: 12px;
+    background: linear-gradient(to right, #2c3e50, #4ca1af);
+    color: white;
+}
+
+.cta-box h4 {
+    margin-bottom: 10px;
+}
+
+.cta-box a {
+    margin-top: 10px;
+}
+
+/* BUTTON */
+.btn-cta {
+    background: white;
+    color: #2c3e50;
+    border: none;
+    padding: 10px 25px;
+    border-radius: 30px;
+    font-weight: 600;
+    display: inline-block;
+}
+
+.btn-cta:hover {
+    opacity: 0.9;
+    color: #2c3e50;
+}
+
+.btn-primary:hover {
+    opacity: 0.9;
+}
+
+/* ANIMATION */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(25px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+</style>
+
+<!-- HERO -->
+<div class="about-hero">
+    <h2>About DEREJA.et</h2>
+    <p>Connecting talent with real opportunities across Ethiopia 🇪🇹</p>
+</div>
+
+<!-- MAIN -->
+<div class="section-box">
+
+    <!-- INTRO -->
+    <h3>Who We Are</h3>
+    <p>
+        <strong>DEREJA.et</strong> is a modern job platform built to bridge the gap 
+        between job seekers and employers. We focus on delivering a simple, 
+        fast, and reliable experience for everyone.
+    </p>
+
+    <!-- STATS -->
+    <div class="stats">
+        <div class="stat">
+            <h2>10K+</h2>
+            <p>Job Seekers</p>
+        </div>
+        <div class="stat">
+            <h2>500+</h2>
+            <p>Active Jobs</p>
+        </div>
+        <div class="stat">
+            <h2>300+</h2>
+            <p>Companies</p>
+        </div>
+    </div>
+
+    <!-- MISSION -->
+    <h3 class="mt-4">Our Mission</h3>
+    <p>
+        To simplify job searching and empower people to find meaningful careers 
+        while helping companies discover the right talent.
+    </p>
+
+    <!-- FEATURES -->
+    <div class="features">
+
+        <div class="feature-box">
+            <i class="fas fa-bolt"></i>
+            <h5>Fast</h5>
+            <p>Quick access to the latest job listings.</p>
+        </div>
+
+        <div class="feature-box">
+            <i class="fas fa-shield-alt"></i>
+            <h5>Trusted</h5>
+            <p>We focus on quality and verified opportunities.</p>
+        </div>
+
+        <div class="feature-box">
+            <i class="fas fa-mobile-alt"></i>
+            <h5>Easy to Use</h5>
+            <p>Simple interface built for everyone.</p>
+        </div>
+
+    </div>
+
+    <!-- VISION -->
+    <h3 class="mt-4">Our Vision</h3>
+    <p>
+        To become Africa’s leading digital job platform and help thousands 
+        of people achieve their career dreams.
+    </p>
+
+    <!-- CTA -->
+    <div class="cta-box">
+        <h4> Ready to find your next job?</h4>
+        <p>Start exploring opportunities now</p>
+        <a href="/jobs/" class="btn btn-cta">Browse Jobs</a>
+    </div>
+
+</div>
+
+{% endblock %}

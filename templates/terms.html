@@ -1,0 +1,152 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+
+/* HERO */
+.policy-hero {
+    background: linear-gradient(to right, #2c3e50, #4ca1af);
+    color: white;
+    padding: 70px 20px;
+    text-align: center;
+    border-radius: 12px;
+}
+
+/* CARD */
+.policy-card {
+    max-width: 1000px;
+    margin: -50px auto 40px;
+    background: #fff;
+    padding: 40px;
+    border-radius: 14px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+    animation: fadeInUp 0.5s ease;
+}
+
+/* TITLES */
+.policy-card h1 {
+    font-size: 30px;
+    color: #2c3e50;
+    margin-bottom: 10px;
+}
+
+.policy-card h2 {
+    font-size: 18px;
+    margin-top: 25px;
+    color: #4ca1af;
+}
+
+/* TEXT */
+.policy-card p,
+.policy-card li {
+    font-size: 15px;
+    color: #555;
+    line-height: 1.7;
+}
+
+/* LIST */
+.policy-card ul {
+    padding-left: 20px;
+}
+
+/* DIVIDER */
+.divider {
+    height: 1px;
+    background: #eee;
+    margin: 20px 0;
+}
+
+/* ANIMATION */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(25px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+</style>
+
+<!-- HERO -->
+<div class="policy-hero">
+    <h2>Terms of Service</h2>
+    <p>Please read carefully before using DEREJA.et</p>
+</div>
+
+<!-- CARD -->
+<div class="policy-card">
+
+<h1>Terms of Service</h1>
+<p><strong>Effective Date:</strong> 2026</p>
+
+<h2>1. Acceptance of Terms</h2>
+<p>
+By using <strong>DEREJA.et</strong>, you agree to comply with these Terms of Service.
+</p>
+
+<div class="divider"></div>
+
+<h2>2. Use of the Platform</h2>
+<ul>
+<li>You must provide accurate information</li>
+<li>You agree not to misuse the platform</li>
+<li>You must not post false or misleading job listings</li>
+</ul>
+
+<div class="divider"></div>
+
+<h2>3. Job Listings</h2>
+<p>
+We aggregate job listings for convenience. We do not guarantee the accuracy or legitimacy of every listing.
+</p>
+
+<div class="divider"></div>
+
+<h2>4. User Accounts</h2>
+<p>
+You are responsible for maintaining the confidentiality of your account.
+</p>
+
+<div class="divider"></div>
+
+<h2>5. Applications</h2>
+<p>
+DEREJA.et is not responsible for hiring decisions made by employers.
+</p>
+
+<div class="divider"></div>
+
+<h2>6. Prohibited Activities</h2>
+<ul>
+<li>Fraudulent activity</li>
+<li>Spamming</li>
+<li>Uploading malicious content</li>
+</ul>
+
+<div class="divider"></div>
+
+<h2>7. Limitation of Liability</h2>
+<p>
+We are not liable for any loss or damage resulting from use of the platform.
+</p>
+
+<div class="divider"></div>
+
+<h2>8. Changes to Terms</h2>
+<p>
+We may update these terms at any time.
+</p>
+
+<div class="divider"></div>
+
+<h2>9. Contact</h2>
+<p>
+For questions, contact us via the Contact page.
+</p>
+
+</div>
+
+{% endblock %}

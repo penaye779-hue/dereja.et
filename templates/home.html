@@ -1,0 +1,579 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% load static %}
+
+{% block content %}
+
+<style>
+/* HERO */
+.hero-section {
+    background: transparent;
+    padding: 15px 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 30px;
+    flex-wrap: wrap;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.hero-left h1 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #2c3e50;
+    margin: 0;
+    line-height: 1.3;
+}
+
+/* CV CARD — gradient + animations */
+.cv-card {
+    background: linear-gradient(to right, #2c3e50, #4ca1af);
+    border-radius: 14px;
+    padding: 20px 26px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    min-width: 280px;
+    max-width: 400px;
+    flex-shrink: 0;
+    position: relative;
+    overflow: hidden;
+    animation: cardEntrance 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+    box-shadow: 0 8px 30px rgba(44, 62, 80, 0.25);
+}
+
+/* Shimmer sweep across the card */
+.cv-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(120deg, transparent, rgba(255,255,255,0.18), transparent);
+    animation: shimmer 2.8s ease-in-out infinite;
+}
+
+/* Subtle pulsing glow ring */
+.cv-card::after {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border-radius: 17px;
+    background: linear-gradient(to right, #4ca1af, #2c3e50, #4ca1af);
+    z-index: -1;
+    animation: glowPulse 2.5s ease-in-out infinite;
+}
+
+.cv-card-icon {
+    font-size: 38px;
+    line-height: 1;
+    flex-shrink: 0;
+    animation: iconBounce 2s ease-in-out infinite;
+}
+
+.cv-card-text h3 {
+    color: #fff;
+    font-size: 16px;
+    font-weight: 700;
+    margin: 0 0 6px 0;
+}
+
+.cv-card-text p {
+    color: rgba(255,255,255,0.85);
+    font-size: 12px;
+    margin: 0 0 12px 0;
+    line-height: 1.5;
+}
+
+.btn-cv {
+    display: inline-block;
+    padding: 9px 18px;
+    background: #fff;
+    color: #2c3e50;
+    font-weight: 700;
+    font-size: 13px;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: 0.2s;
+    white-space: nowrap;
+    animation: btnPulse 2s ease-in-out infinite;
+}
+
+.btn-cv:hover {
+    background: #f0f0f0;
+    color: #2c3e50;
+    text-decoration: none;
+    transform: translateY(-2px) scale(1.04);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+    animation: none;
+}
+
+/* ---- Keyframes ---- */
+@keyframes cardEntrance {
+    from { opacity: 0; transform: translateY(-18px) scale(0.96); }
+    to   { opacity: 1; transform: translateY(0)    scale(1); }
+}
+
+@keyframes shimmer {
+    0%   { left: -100%; }
+    50%  { left: 130%; }
+    100% { left: 130%; }
+}
+
+@keyframes glowPulse {
+    0%, 100% { opacity: 0.5; transform: scale(1); }
+    50%       { opacity: 1;   transform: scale(1.01); }
+}
+
+@keyframes iconBounce {
+    0%, 100% { transform: translateY(0); }
+    50%       { transform: translateY(-5px); }
+}
+
+@keyframes btnPulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(255,255,255,0.5); }
+    50%       { box-shadow: 0 0 0 7px rgba(255,255,255,0); }
+}
+
+@media (max-width: 768px) {
+    .hero-section {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .cv-card {
+        max-width: 100%;
+        width: 100%;
+    }
+}
+
+/* SEARCH */
+.search-bar {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.search-bar input {
+    flex: 1;
+}
+
+/* LAYOUT */
+.main {
+    display: grid;
+    grid-template-columns: 2.5fr 1fr;
+    gap: 20px;
+}
+
+@media (max-width: 768px) {
+    .main {
+        grid-template-columns: 1fr;
+    }
+
+    .job-card {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .job-logo img {
+        width: 40px;
+        height: 40px;
+    }
+}
+
+/* JOB CARD */
+.job-card {
+    background: #fff;
+    border: 0px solid #ddd;
+    padding: 0px;
+    margin-bottom: 10px;
+    display: flex;
+    gap: 12px;
+    border-radius: 6px;
+    transition: 0.2s;
+    cursor: pointer;
+}
+
+.job-card:hover {
+    box-shadow: 0 12px 12px rgba(0,0,0,0.08);
+    transform: translateY(-2px);
+}
+
+.job-logo {
+    width: 60px;
+    height: 60px;
+}
+
+.job-logo img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+.job-content {
+    flex: 1;
+}
+
+.job-title {
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.job-meta {
+    font-size: 12px;
+    color: #666;
+}
+
+.badge-new {
+    background: #28a745;
+    color: white;
+    font-size: 10px;
+    padding: 2px 5px;
+    margin-left: 5px;
+}
+
+.badge-type {
+    border: 1px solid #4ca1af;
+    color: #4ca1af;
+    font-size: 10px;
+    padding: 2px 6px;
+    margin-left: 10px;
+    border-radius: 3px;
+}
+
+/* SIDEBAR */
+.sidebar {
+    background: #fff;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+}
+
+/* PAGINATION */
+.pagination .page-link {
+    color: #2c3e50;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    margin: 0 3px;
+}
+
+.pagination .page-link:hover {
+    background: #4ca1af;
+    color: white;
+}
+
+.pagination .active .page-link {
+    background: linear-gradient(to right, #2c3e50, #4ca1af);
+    border: none;
+    color: white;
+}
+
+/* POPUP */
+.subscribe-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.popup-content {
+    background: #fff;
+    padding: 25px;
+    border-radius: 10px;
+    width: 320px;
+    text-align: center;
+    animation: fadeIn 0.4s ease;
+    position: relative;
+}
+
+.close-popup {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+.pagination-wrap {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    margin-top: 20px;
+}
+
+.page-btn {
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+    background: white;
+    color: #2c3e50;
+    font-size: 14px;
+    text-decoration: none;
+    transition: 0.2s;
+}
+
+.page-btn:hover {
+    background: #2c3e50;
+    color: white;
+}
+
+.page-info {
+    font-size: 13px;
+    color: #6b7280;
+    padding: 0 8px;
+}
+
+@keyframes fadeIn {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+</style>
+
+<!-- HERO with CV Card -->
+<div class="hero-section">
+    <div class="hero-left">
+        <h1>Find The Right Job Vacancies<br>In Ethiopia</h1>
+    </div>
+
+    <!-- CV CARD (positioned top-right as marked) -->
+    <div class="cv-card">
+        <div class="cv-card-icon">📄</div>
+        <div class="cv-card-text">
+            <h3>Build Your CV</h3>
+            <p>Create a modern, job-ready CV in minutes. Choose templates &amp; download instantly.</p>
+            <a href="{% url 'cv_builder' %}" class="btn-cv">Build Your CV →</a>
+        </div>
+    </div>
+</div>
+
+<div class="container" style="max-width: 1100px;">
+
+    <form method="GET">
+        <!-- SEARCH -->
+        <div class="search-bar" style="margin-top: 20px;">
+            <input type="text" name="q" class="form-control"
+                   placeholder="Job title, keywords or company name"
+                   value="{{ request.GET.q }}">
+
+            <select class="form-control" name="location">
+                <option value="">All Regions</option>
+                <option>Addis Ababa</option>
+            </select>
+        </div>
+
+        <div class="main">
+
+            <!-- LEFT -->
+            <div>
+                {% for job in jobs %}
+                <div class="job-card" onclick="goToDetail('{{ job.id }}')">
+
+                    <div class="job-logo">
+                        {% if job.logo %}
+                            <img src="{{ job.logo.url }}">
+                        {% else %}
+                            <div style="width:50px;height:50px;background:#ddd;"></div>
+                        {% endif %}
+                    </div>
+
+                    <div class="job-content">
+                        <div class="job-title">
+                            {{ job.title }}
+                            <span class="badge-new">new</span>
+                            <span class="badge-type">{{ job.job_type }}</span>
+                        </div>
+
+                        <div class="job-meta">
+                            {{ job.company }} • {{ job.location }}
+                        </div>
+
+                        <div class="job-meta">
+                            <small class="text-muted">
+                                Posted {{ job.created_at|timesince }} ago
+                            </small>
+                        </div>
+
+                        <div class="mt-2 d-flex justify-content-between align-items-center">
+                            <small class="text-muted">View job details</small>
+
+                            <a href="/jobs/{{ job.id }}/"
+                               class="btn btn-sm btn-primary"
+                               onclick="event.stopPropagation();">
+                                See more
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                    <p>No jobs available</p>
+                {% endfor %}
+            </div>
+
+            <!-- RIGHT -->
+            <div class="sidebar">
+                <h6>Job type</h6>
+
+                <label><input type="radio" name="job_type" value="" {% if not request.GET.job_type %}checked{% endif %}> All</label><br>
+                <label><input type="radio" name="job_type" value="Full Time" {% if request.GET.job_type == "Full Time" %}checked{% endif %}> Full Time</label><br>
+                <label><input type="radio" name="job_type" value="Part Time" {% if request.GET.job_type == "Part Time" %}checked{% endif %}> Part Time</label><br>
+                <label><input type="radio" name="job_type" value="Contract" {% if request.GET.job_type == "Contract" %}checked{% endif %}> Contract</label><br>
+
+                <h6>Category</h6>
+                <select class="form-control" name="category">
+                    <option value="">All Categories</option>
+                    {% for cat in categories %}
+                        <option value="{{ cat.id }}"
+                            {% if request.GET.category == cat.id|stringformat:"s" %}selected{% endif %}>
+                            {{ cat.name }}
+                        </option>
+                    {% endfor %}
+                </select>
+
+                <h6>Location</h6>
+                <input type="text" name="location" class="form-control">
+
+                <h6>Remote</h6>
+                <label>
+                    <input type="checkbox" name="remote"
+                        {% if request.GET.remote %}checked{% endif %}>
+                    Remote only
+                </label>
+
+                <br><br>
+
+                <button class="btn btn-primary w-100" type="submit">
+                    Apply Filters
+                </button>
+            </div>
+
+        </div>
+    </form>
+</div>
+
+{% if jobs.has_other_pages %}
+<div class="pagination-wrap">
+
+    {% if jobs.has_previous %}
+        <a href="?page=1" class="page-btn">«</a>
+        <a href="?page={{ jobs.previous_page_number }}" class="page-btn">‹</a>
+    {% endif %}
+
+    <span class="page-info">
+        {{ jobs.number }} / {{ jobs.paginator.num_pages }}
+    </span>
+
+    {% if jobs.has_next %}
+        <a href="?page={{ jobs.next_page_number }}" class="page-btn">›</a>
+        <a href="?page={{ jobs.paginator.num_pages }}" class="page-btn">»</a>
+    {% endif %}
+
+</div>
+{% endif %}
+
+<!-- POPUP -->
+<div id="subscribePopup" class="subscribe-popup" onclick="outsideClick(event)">
+    <div class="popup-content">
+
+        <span class="close-popup" onclick="closePopup()">&times;</span>
+
+        <h4>Stay Updated 🚀</h4>
+        <p>Get latest jobs in Ethiopia directly to your email.</p>
+
+        <input id="emailInput" type="email" placeholder="Enter your email" class="form-control mb-2">
+
+        <button onclick="subscribeUser()" class="btn btn-primary w-100">
+            Subscribe
+        </button>
+
+        <p id="subscribeMsg" style="font-size:12px; margin-top:10px;"></p>
+
+    </div>
+</div>
+
+<script>
+function goToDetail(id) {
+    window.location.href = "/jobs/" + id + "/";
+}
+
+setTimeout(function() {
+    if (!localStorage.getItem("subscribedPopupClosed")) {
+        document.getElementById("subscribePopup").style.display = "flex";
+    }
+}, 20000);
+
+function closePopup() {
+    document.getElementById("subscribePopup").style.display = "none";
+    localStorage.setItem("subscribedPopupClosed", "true");
+}
+
+function outsideClick(e) {
+    if (e.target.id === "subscribePopup") {
+        closePopup();
+    }
+}
+
+function subscribeUser() {
+    const email = document.getElementById("emailInput").value;
+    const msg = document.getElementById("subscribeMsg");
+
+    if (!email) {
+        msg.innerHTML = "Please enter email";
+        msg.style.color = "red";
+        return;
+    }
+
+    fetch("/subscribe/", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            "X-CSRFToken": getCookie("csrftoken")
+        },
+        body: "email=" + encodeURIComponent(email)
+    })
+    .then(res => res.json())
+    .then(data => {
+        msg.innerHTML = "✅ Subscribed!";
+        msg.style.color = "green";
+        setTimeout(() => { closePopup(); }, 1500);
+    })
+    .catch(() => {
+        msg.innerHTML = "Something went wrong";
+        msg.style.color = "red";
+    });
+}
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let cookie of cookies) {
+            cookie = cookie.trim();
+            if (cookie.startsWith(name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+</script>
+
+{% endblock %}
