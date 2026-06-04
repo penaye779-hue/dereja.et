@@ -26,7 +26,7 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
     'jobs.apps.JobsConfig',
     "cloudinary",
-    "cloudinary_storage"
+    "cloudinary_storage",
 
     # Third-party
     'rest_framework',
