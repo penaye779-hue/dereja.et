@@ -11,7 +11,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY
 SECRET_KEY = 'django-insecure-change-this-in-production'
-DEBUG = True
+DEBUG = False
 ALLOWED_HOSTS = ['*']
 
 
@@ -133,3 +133,4 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'orogospel43@gmail.com'
 EMAIL_HOST_PASSWORD = 'dlln yyxu tncc rjqw'
 DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
+CREATE_SUPERUSER = True
