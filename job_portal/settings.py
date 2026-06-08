@@ -11,7 +11,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY
 SECRET_KEY = 'django-insecure-change-this-in-production'
-DEBUG = False
+DEBUG = True
 ALLOWED_HOSTS = ['*']
 
 
@@ -80,7 +80,7 @@ WSGI_APPLICATION = 'job_portal.wsgi.application'
 # DATABASE
 DATABASES = {
     "default": dj_database_url.config(
-        default=os.environ.get("postgresql://dereja_db_user:ZhlN3uwwECEDg77m5HSoZN8E1VrAPSLA@dpg-d8h7hga8pkls73c3qhrg-a.virginia-postgres.render.com/dereja_db")
+        default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}"
     )
 }
 
@@ -142,7 +142,7 @@ CELERY_TASK_SERIALIZER = "json"
 CELERY_RESULT_SERIALIZER = "json"
 
 CLOUDINARY_STORAGE = {
-    "CLOUD_NAME": os.environ.get("ddlcez38v"),
-    "API_KEY": os.environ.get("495345158449369"),
-    "API_SECRET": os.environ.get("s2TJsw-3O3Qe7L_70KO3mSOCoig"),
+    "CLOUD_NAME": os.environ.get("CLOUDINARY_CLOUD_NAME"),
+    "API_KEY": os.environ.get("CLOUDINARY_API_KEY"),
+    "API_SECRET": os.environ.get("CLOUDINARY_API_SECRET"),
 }
