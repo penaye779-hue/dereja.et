@@ -4,7 +4,7 @@ Django settings for job_portal project.
 
 from pathlib import Path
 import os
-
+import dj_database_url
 # Base directory
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -79,10 +79,9 @@ WSGI_APPLICATION = 'job_portal.wsgi.application'
 
 # DATABASE
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    "default": dj_database_url.config(
+        default=os.environ.get("postgresql://dereja_db_user:ZhlN3uwwECEDg77m5HSoZN8E1VrAPSLA@dpg-d8h7hga8pkls73c3qhrg-a.virginia-postgres.render.com/dereja_db")
+    )
 }
 
 
@@ -124,8 +123,6 @@ AUTH_USER_MODEL = 'accounts.User'
 
 # DEFAULT AUTO FIELD
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
@@ -143,3 +140,9 @@ CELERY_RESULT_BACKEND = os.environ.get("REDIS_URL")
 CELERY_ACCEPT_CONTENT = ["json"]
 CELERY_TASK_SERIALIZER = "json"
 CELERY_RESULT_SERIALIZER = "json"
+
+CLOUDINARY_STORAGE = {
+    "CLOUD_NAME": os.environ.get("ddlcez38v"),
+    "API_KEY": os.environ.get("495345158449369"),
+    "API_SECRET": os.environ.get("s2TJsw-3O3Qe7L_70KO3mSOCoig"),
+}
