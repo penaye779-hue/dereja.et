@@ -6,7 +6,8 @@ Optimized for Render.com deployment.
 from pathlib import Path
 import os
 import dj_database_url
-
+import cloudinary
+print("Cloudinary config:", cloudinary.config().cloud_name)
 # ─────────────────────────────────────────
 # BASE
 # ─────────────────────────────────────────
@@ -193,4 +194,11 @@ CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
 # Used for media files since Render has no
 # persistent disk on free/starter plans.
 # ─────────────────────────────────────────
-DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
+STORAGES = {
+    "default": {
+        "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
