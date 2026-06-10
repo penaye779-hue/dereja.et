@@ -1,9 +1,12 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DEREJA.et</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 
 <style>
 html { scroll-behavior: smooth; }
@@ -14,32 +17,33 @@ body {
     background: #f4f6f8;
 }
 
-/* THEME COLORS */
 :root {
     --primary-dark: #2c3e50;
     --primary-light: #4ca1af;
 }
 
-/* NAVBAR */
+/* ── NAVBAR ── */
 .navbar {
     background: linear-gradient(to right, #2c3e50, #4ca1af);
-    padding: 22px 40px;
-    border-bottom: 1px solid #eee;
+    padding: 0 16px;
+    height: 64px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
     position: sticky;
     top: 0;
     z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
 }
 
-/* NAV LINKS */
 .navbar a {
     text-decoration: none;
-    color: #ddd;
+    color: rgba(255,255,255,0.85);
     font-size: 15px;
     position: relative;
     transition: 0.3s;
 }
-
-/* 🔥 HOVER LINE */
 .navbar a::after {
     content: "";
     position: absolute;
@@ -50,29 +54,116 @@ body {
     background: #fff;
     transition: width 0.3s ease;
 }
-
 .navbar a:hover::after { width: 100%; }
 .navbar a:hover { color: #fff; }
 .navbar a.fw-bold { color: #fff; }
 
-/* LOGO */
 .logo-gradient {
     font-weight: bold;
-    font-size: 45px;
+    font-size: 28px;
     background: linear-gradient(to right, #ffffff, #4ca1af);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    flex-shrink: 0;
 }
 
-/* CONTENT */
+/* Desktop links */
+.nav-desktop-links {
+    display: none;
+    align-items: center;
+    gap: 20px;
+    flex: 1;
+    justify-content: center;
+}
+
+/* Auth */
+.nav-auth { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+
+.logout-btn {
+    color: rgba(255,255,255,0.8);
+    border: 1px solid rgba(255,255,255,0.4);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+.logout-btn:hover {
+    background: rgba(255,255,255,0.15);
+    color: white;
+}
+
+/* Hamburger */
+.nav-hamburger {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 8px;
+    border: none;
+    background: transparent;
+    flex-shrink: 0;
+}
+.nav-hamburger span {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background: white;
+    border-radius: 2px;
+    transition: all 0.25s ease;
+}
+.nav-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.nav-hamburger.open span:nth-child(2) { opacity: 0; }
+.nav-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+/* Mobile menu */
+.nav-mobile-menu {
+    display: none;
+    position: fixed;
+    top: 64px;
+    left: 0;
+    right: 0;
+    background: #1e2d3d;
+    padding: 8px 16px 16px;
+    z-index: 999;
+    border-bottom: 2px solid #4ca1af;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+}
+.nav-mobile-menu.open { display: block; }
+.nav-mobile-menu a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: rgba(255,255,255,0.85) !important;
+    font-size: 15px;
+    font-weight: 500;
+    padding: 12px 10px;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+    border-radius: 8px;
+    transition: all 0.2s;
+    text-decoration: none;
+}
+.nav-mobile-menu a::after { display: none !important; }
+.nav-mobile-menu a:hover,
+.nav-mobile-menu a.active {
+    color: white !important;
+    background: rgba(255,255,255,0.08);
+}
+.nav-mobile-menu a:last-child { border-bottom: none; }
+.mobile-divider {
+    height: 1px;
+    background: rgba(255,255,255,0.1);
+    margin: 6px 0;
+}
+
+/* ── CONTENT ── */
 .container {
     width: 90%;
     max-width: 1100px;
     margin: auto;
     margin-top: 30px;
 }
-
-/* ADD THIS BELOW */
 .cvb-page {
     width: 100% !important;
     max-width: 100% !important;
@@ -80,277 +171,155 @@ body {
     padding: 0 !important;
 }
 
-/* BUTTON */
-/* CUSTOM BUTTON (SAFE GLOBAL USE) */
-.btn-custom {
-    background: linear-gradient(to right, #2c3e50, #4ca1af);
-    color: white;
-    border: none;
-}
+/* ── BUTTONS ── */
+.btn-custom { background: linear-gradient(to right, #2c3e50, #4ca1af); color: white; border: none; }
+.btn-custom:hover { opacity: 0.9; color: white; }
+.btn-block { width: 100%; padding: 12px; border-radius: 8px; }
+.btn-primary { background: linear-gradient(to right, #2c3e50, #4ca1af) !important; border: none !important; color: #fff !important; }
+.btn-primary:hover { opacity: 0.9; color: #fff !important; }
+.btn-main { background: linear-gradient(to right, #2c3e50, #4ca1af); color: white; border: none; padding: 10px 16px; border-radius: 8px; font-weight: 600; }
+.btn-main:hover { opacity: 0.9; color: white; }
 
-.btn-custom:hover {
-    opacity: 0.9;
-    color: white;
-}
-
-/* CONTACT FULL WIDTH BUTTON */
-.btn-block {
-    width: 100%;
-    padding: 12px;
-    border-radius: 8px;
-}
-.btn-primary:hover { opacity: 0.9; }
-
-/* LOGOUT */
-.logout-btn {
-    color: #5be0dea8;
-    border: 1px solid rgba(255,255,255,0.5);
-    padding: 6px 14px;
-    border-radius: 20px;
-    font-size: 14px;
-    transition: all 0.3s ease;
-}
-
-.logout-btn:hover {
-    background: #57c7cdb4;
-    color: #2c3e50;
-    border-color: #fff;
-}
-
-/* INPUT */
+/* ── FORMS ── */
 .form-control:focus {
     border-color: var(--primary-dark);
-    box-shadow: 0 0 0 0.1rem rgba(44, 62, 80, 0.25);
+    box-shadow: 0 0 0 0.1rem rgba(44,62,80,0.25);
 }
 
-/* FOOTER */
+/* ── FOOTER ── */
 .footer {
     background: #0f172a;
     color: #ccc;
-    padding: 40px 30px;
+    padding: 40px 16px 20px;
     margin-top: 50px;
 }
-
 .footer-container {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 30px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 28px;
     max-width: 1100px;
     margin: auto;
 }
-
 .footer-middle { flex: 1.5; }
-
-.footer-column {
-    flex: 1;
-    min-width: 200px;
-}
-
-.footer-column h5 {
-    color: #fff;
-    margin-bottom: 15px;
-}
-
-.footer-column a {
-    display: block;
-    color: #ccc;
-    text-decoration: none;
-    margin-bottom: 8px;
-    font-size: 14px;
-    position: relative;
-}
-.btn-main {
-    background: linear-gradient(to right, #2c3e50, #4ca1af);
-    color: white;
-    border: none;
-    padding: 10px 16px;
-    border-radius: 8px;
-    font-weight: 600;
-}
-
-.btn-main:hover {
-    opacity: 0.9;
-    color: white;
-}
-
-/* FOOTER ANIMATION */
-.footer-column a::after {
-    content: "";
-    position: absolute;
-    width: 0%;
-    height: 1px;
-    left: 0;
-    bottom: -3px;
-    background: #4ca1af;
-    transition: width 0.3s;
-}
-
+.footer-column { min-width: 0; }
+.footer-column h5 { color: #fff; margin-bottom: 12px; font-size: 14px; }
+.footer-column a { display: block; color: #94a3b8; text-decoration: none; margin-bottom: 6px; font-size: 13px; position: relative; transition: color 0.2s; }
+.footer-column a::after { content: ""; position: absolute; width: 0%; height: 1px; left: 0; bottom: -2px; background: #4ca1af; transition: width 0.3s; }
 .footer-column a:hover::after { width: 100%; }
 .footer-column a:hover { color: var(--primary-light); }
-
-/* FORCE COLOR */
-.footer a { color: #ccc !important; }
+.footer a { color: #94a3b8 !important; }
 .footer a:hover { color: var(--primary-light) !important; }
 
-.footer-logo {
-    font-weight: bold;
-    font-size: 20px;
-    background: linear-gradient(to right, #2c3e50, #4ca1af);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+.footer-logo { font-weight: bold; font-size: 20px; background: linear-gradient(to right, #2c3e50, #4ca1af); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.footer-bottom { text-align: center; margin-top: 24px; border-top: 1px solid #1e293b; padding-top: 14px; font-size: 12px; color: #475569; max-width: 1100px; margin: 24px auto 0; padding-top: 14px; }
+
+.subscribe-box { display: flex; width: 100%; margin-top: 10px; border-radius: 20px; overflow: hidden; border: 1px solid #334155; }
+.subscribe-box input { flex: 1; height: 36px; background: #1e293b; border: none; color: white; padding: 0 12px; font-size: 13px; outline: none; min-width: 0; }
+.subscribe-box input::placeholder { color: #64748b; }
+.subscribe-box button { border-radius: 0; background: linear-gradient(to right, #2c3e50, #4ca1af); color: white; border: none; padding: 0 14px; font-size: 13px; font-weight: 600; white-space: nowrap; cursor: pointer; }
+.subscribe-box button:hover { opacity: 0.9; }
+
+.social-icons { display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
+.social-icons a { width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; background: #1e293b; border-radius: 50%; color: #94a3b8; font-size: 13px; transition: all 0.3s ease; }
+.social-icons a::after { display: none !important; }
+.social-icons a:hover { background: linear-gradient(to right, #2c3e50, #4ca1af); color: #fff; transform: translateY(-3px); }
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-thumb { background: linear-gradient(to bottom, #2c3e50, #4ca1af); border-radius: 10px; }
+
+/* ── TABLET ≥640px ── */
+@media (min-width: 640px) {
+    .footer-container { grid-template-columns: 1fr 1fr; }
 }
 
-.footer-bottom {
-    text-align: center;
-    margin-top: 30px;
-    border-top: 1px solid #333;
-    padding-top: 15px;
-    font-size: 13px;
-    color: #888;
-}
-
-/* SUBSCRIBE */
-.subscribe-box {
-    display: flex;
-    width: 100%;
-    margin-top: 10px;
-}
-
-.subscribe-box input {
-    flex: 1;
-    height: 35px;
-    border-radius: 20px 0 0 20px;
-}
-
-.subscribe-box button {
-    border-radius: 0 20px 20px 0;
-}
-
-/* SCROLLBAR */
-::-webkit-scrollbar { width: 8px; }
-::-webkit-scrollbar-thumb {
-    background: linear-gradient(to bottom, #2c3e50, #4ca1af);
-    border-radius: 10px;
-}
-.social-icons {
-    display: flex;
-    gap: 12px;
-    margin-top: 10px;
-}
-
-.social-icons a {
-    width: 35px;
-    height: 35px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #1e293b;
-    border-radius: 50%;
-    color: #ccc;
-    font-size: 14px;
-    transition: all 0.3s ease;
-}
-
-/* 🔥 HOVER EFFECT */
-.social-icons a:hover {
-    background: linear-gradient(to right, #2c3e50, #4ca1af);
-    color: #fff;
-    transform: translateY(-3px);
-}
-/* FIX ONLY BOOTSTRAP BLUE BUTTONS */
-.btn-primary {
-    background: linear-gradient(to right, #2c3e50, #4ca1af) !important;
-    border: none !important;
-    color: #fff !important;
-}
-
-.btn-primary:hover {
-    opacity: 0.9;
-    color: #fff !important;
+/* ── DESKTOP ≥1024px ── */
+@media (min-width: 1024px) {
+    .navbar { padding: 0 40px; }
+    .logo-gradient { font-size: 36px; }
+    .nav-desktop-links { display: flex; }
+    .nav-hamburger { display: none; }
+    .footer-container { grid-template-columns: 1.5fr 1fr 1fr 1.5fr; }
 }
 </style>
 </head>
 
 <body>
 
-<!-- NAVBAR -->
-<div class="navbar d-flex align-items-center justify-content-between">
-
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+<!-- ═══════ NAVBAR ═══════ -->
+<div class="navbar">
 
     <a href="/" class="logo-gradient">DEREJA.et</a>
-    <!-- CENTER LINKS -->
-    <div class="d-flex gap-4 align-items-center">
 
-        <a href="/" class="{% if request.path == '/' %}fw-bold{% endif %}">
-            Home
+    <!-- Desktop links -->
+    <div class="nav-desktop-links">
+        <a href="/" class="{% if request.path == '/' %}fw-bold{% endif %}">Home</a>
+        <a href="/jobs/" class="{% if '/jobs/' in request.path and 'cv' not in request.path %}fw-bold{% endif %}">Jobs</a>
+        <a href="{% url 'cv_builder' %}" class="{% if 'cv' in request.path %}fw-bold{% endif %}">CV Builder</a>
+        <a href="{% url 'contact' %}" class="{% if 'contact' in request.path %}fw-bold{% endif %}">Contact</a>
+        <a href="/jobs/saved/" class="d-flex align-items-center gap-1 position-relative {% if 'saved' in request.path %}fw-bold{% endif %}">
+            <i class="fas fa-bookmark"></i> Saved
+            <span id="savedCountBadge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size:10px;">0</span>
         </a>
-
-        <a href="/jobs/" class="{% if 'jobs' in request.path %}fw-bold{% endif %}">
-            Jobs
-        </a>
-
-        <a href="{% url 'contact' %}" class="{% if 'contact' in request.path %}fw-bold{% endif %}">
-            Contact
-        </a>
-
-        <!-- ⭐ SAVED JOBS (NEW CLEAN POSITION) -->
-        <a href="/jobs/saved/"
-           class="d-flex align-items-center gap-1 position-relative {% if 'saved' in request.path %}fw-bold{% endif %}">
-
-            <i class="fas fa-bookmark"></i>
-            Saved
-
-            <!-- optional badge -->
-            <span id="savedCountBadge"
-                  class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
-                  style="font-size:10px;">
-                0
-            </span>
-        </a>
-
     </div>
 
-    <!-- RIGHT AUTH -->
-    <div>
-        {% if user.is_authenticated %}
-            <a href="/accounts/logout/" class="logout-btn">Logout</a>
-        {% else %}
-            <a href="/accounts/login/" class="me-2">Login</a>
-            <a href="/accounts/register/">Register</a>
-        {% endif %}
+    <!-- Right side -->
+    <div style="display:flex;align-items:center;gap:10px;">
+        <div class="nav-auth">
+            {% if user.is_authenticated %}
+                <a href="/accounts/logout/" class="logout-btn">Logout</a>
+            {% else %}
+                <a href="/accounts/login/" style="color:rgba(255,255,255,0.8);font-size:13px;">Login</a>
+                <a href="/accounts/register/" class="logout-btn">Register</a>
+            {% endif %}
+        </div>
+        <button class="nav-hamburger" id="hamburger" aria-label="Menu">
+            <span></span><span></span><span></span>
+        </button>
     </div>
 
 </div>
 
-<!-- CONTENT -->
+<!-- Mobile Menu -->
+<div class="nav-mobile-menu" id="mobileMenu">
+    <a href="/" class="{% if request.path == '/' %}active{% endif %}"><i class="fas fa-home" style="width:18px"></i>Home</a>
+    <a href="/jobs/" class="{% if '/jobs/' in request.path and 'cv' not in request.path %}active{% endif %}"><i class="fas fa-briefcase" style="width:18px"></i>Jobs</a>
+    <a href="{% url 'cv_builder' %}" class="{% if 'cv' in request.path %}active{% endif %}"><i class="fas fa-file-alt" style="width:18px"></i>CV Builder</a>
+    <a href="{% url 'contact' %}" class="{% if 'contact' in request.path %}active{% endif %}"><i class="fas fa-envelope" style="width:18px"></i>Contact</a>
+    <a href="/jobs/saved/"><i class="fas fa-bookmark" style="width:18px"></i>Saved Jobs</a>
+    <div class="mobile-divider"></div>
+    {% if user.is_authenticated %}
+        <a href="/accounts/logout/"><i class="fas fa-sign-out-alt" style="width:18px"></i>Logout</a>
+    {% else %}
+        <a href="/accounts/login/"><i class="fas fa-sign-in-alt" style="width:18px"></i>Login</a>
+        <a href="/accounts/register/"><i class="fas fa-user-plus" style="width:18px"></i>Register</a>
+    {% endif %}
+</div>
+
+<!-- Content -->
 <div class="{% block container_class %}container{% endblock %}">
     {% block content %}{% endblock %}
 </div>
 
-<p style="font-size:13px; color:#888; margin-top:20px; text-align:center;">
+<p style="font-size:13px;color:#888;margin-top:20px;text-align:center;">
     DEREJA.et is not responsible for external job postings.
 </p>
 
-<!-- FOOTER -->
-<!-- FOOTER -->
-<!-- FOOTER -->
+<!-- Footer -->
 <footer class="footer">
     <div class="footer-container">
-
-        <!-- BRAND -->
         <div class="footer-column">
             <a href="/" class="footer-logo">DEREJA.et</a>
-            <p>
-                Find the latest job opportunities in Ethiopia.<br>
-                Simple.<br>
-                Fast.<br>
-                Reliable.
+            <p style="font-size:13px;color:#94a3b8;margin-top:8px;line-height:1.6;">
+                Find the latest job opportunities in Ethiopia.<br>Simple. Fast. Reliable.
             </p>
+            <div class="social-icons">
+                <a href="https://facebook.com/yourpage"><i class="fab fa-facebook-f"></i></a>
+                <a href="https://t.me/DEREJAet"><i class="fab fa-telegram"></i></a>
+                <a href="https://linkedin.com/company/yourcompany"><i class="fab fa-linkedin-in"></i></a>
+                <a href="https://twitter.com/yourhandle"><i class="fab fa-x-twitter"></i></a>
+            </div>
         </div>
-
-        <!-- QUICK LINKS -->
         <div class="footer-column footer-middle">
             <h5>Quick Links</h5>
             <a href="/">Home</a>
@@ -358,67 +327,50 @@ body {
             <a href="{% url 'contact' %}">Contact</a>
             <a href="{% url 'about' %}">About Us</a>
         </div>
-
-        <!-- LEGAL -->
         <div class="footer-column">
             <h5>Legal</h5>
             <a href="{% url 'privacy' %}">Privacy Policy</a>
             <a href="{% url 'terms' %}">Terms of Service</a>
             <a href="{% url 'disclaimer' %}">Disclaimer</a>
         </div>
-
-        <!-- RIGHT COLUMN (SOCIAL + SUBSCRIBE) -->
         <div class="footer-column">
-
             <h5>Follow Us</h5>
-
-            <!-- SOCIAL FIRST -->
-            <div class="social-icons">
-                <a href="https://facebook.com/yourpage">
-                    <i class="fab fa-facebook-f"></i>
-                </a>
-
-                <a href="https://t.me/DEREJAet">
-                    <i class="fab fa-telegram"></i>
-                </a>
-
-                <a href="https://linkedin.com/company/yourcompany">
-                    <i class="fab fa-linkedin-in"></i>
-                </a>
-
-                <a href="https://twitter.com/yourhandle">
-                    <i class="fab fa-x-twitter"></i>
-                </a>
-            </div>
-
-            <!-- SUBSCRIBE BELOW -->
-            <h5 class="mt-4">Stay Updated</h5>
-
+            <h5 class="mt-3">Stay Updated</h5>
             <div class="subscribe-box">
-                <input id="footerEmail" type="email" placeholder="Enter your email" class="form-control">
-                <button onclick="subscribeFooter()" class="btn btn-main btn-sm">
-                    Subscribe
-                </button>
+                <input id="footerEmail" type="email" placeholder="Enter your email">
+                <button onclick="subscribeFooter()">Subscribe</button>
             </div>
-
-            <p id="footerMsg" style="font-size:12px; margin-top:10px;"></p>
-
-            <small class="text-muted d-block mt-2">
-                Get latest jobs directly in your inbox.
-            </small>
-
+            <p id="footerMsg" style="font-size:12px;margin-top:10px;"></p>
+            <small class="text-muted d-block mt-2">Get latest jobs directly in your inbox.</small>
         </div>
-
     </div>
-
-    <div class="footer-bottom">
-        © 2026 DEREJA.et. All rights reserved.
-    </div>
+    <div class="footer-bottom">© 2026 DEREJA.et. All rights reserved.</div>
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
+// Hamburger
+var hamburger = document.getElementById('hamburger');
+var mobileMenu = document.getElementById('mobileMenu');
+hamburger.addEventListener('click', function() {
+    hamburger.classList.toggle('open');
+    mobileMenu.classList.toggle('open');
+});
+mobileMenu.querySelectorAll('a').forEach(function(link) {
+    link.addEventListener('click', function() {
+        hamburger.classList.remove('open');
+        mobileMenu.classList.remove('open');
+    });
+});
+document.addEventListener('click', function(e) {
+    if (!hamburger.contains(e.target) && !mobileMenu.contains(e.target)) {
+        hamburger.classList.remove('open');
+        mobileMenu.classList.remove('open');
+    }
+});
+
+// CSRF
 function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
@@ -434,46 +386,26 @@ function getCookie(name) {
     return cookieValue;
 }
 
+// Subscribe
 function subscribeFooter() {
     const email = document.getElementById("footerEmail").value;
     const msg = document.getElementById("footerMsg");
-
-    if (!email) {
-        msg.innerHTML = "Please enter email";
-        msg.style.color = "red";
-        return;
-    }
-
+    if (!email) { msg.innerHTML = "Please enter email"; msg.style.color = "red"; return; }
     fetch("/subscribe/", {
         method: "POST",
-        headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-            "X-CSRFToken": getCookie("csrftoken")
-        },
+        headers: { "Content-Type": "application/x-www-form-urlencoded", "X-CSRFToken": getCookie("csrftoken") },
         body: "email=" + encodeURIComponent(email)
     })
-    .then(res => {
-        if (!res.ok) {
-            throw new Error("Server error");
-        }
-        return res.json();
-    })
+    .then(res => res.json())
     .then(data => {
-        if (data.error) {
-            msg.innerHTML = data.error;
-            msg.style.color = "red";
-        } else {
-            msg.innerHTML = data.message;
-            msg.style.color = "lightgreen";
-            document.getElementById("footerEmail").value = "";
-        }
+        if (data.error) { msg.innerHTML = data.error; msg.style.color = "red"; }
+        else { msg.innerHTML = data.message; msg.style.color = "lightgreen"; document.getElementById("footerEmail").value = ""; }
     })
-    .catch(() => {
-        msg.innerHTML = "Server error. Try again.";
-        msg.style.color = "red";
-    });
+    .catch(() => { msg.innerHTML = "Server error. Try again."; msg.style.color = "red"; });
 }
 </script>
+
+{% block extra_js %}{% endblock %}
 
 </body>
 </html>
