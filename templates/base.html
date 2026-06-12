@@ -3,31 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DEREJA.et</title>
+    <title>DEREJA.et — Jobs in Ethiopia</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 
 <style>
+*, *::before, *::after { box-sizing: border-box; }
+
 html { scroll-behavior: smooth; }
 
 body {
     margin: 0;
-    font-family: Arial, sans-serif;
-    background: #f4f6f8;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #f0f2f5;
+    color: #1a2332;
+    line-height: 1.6;
 }
 
 :root {
-    --primary-dark: #2c3e50;
-    --primary-light: #4ca1af;
+    --navy:    #1e2d3d;
+    --teal:    #4ca1af;
+    --teal-lt: #e1f4f7;
+    --teal-md: #b2dde4;
+    --text:    #1a2332;
+    --muted:   #64748b;
+    --border:  #e2e8f0;
+    --surface: #ffffff;
+    --bg:      #f0f2f5;
 }
 
 /* ── NAVBAR ── */
 .navbar {
-    background: linear-gradient(to right, #2c3e50, #4ca1af);
-    padding: 0 16px;
-    height: 64px;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
+    background: #1e2d3d;
+    padding: 0 20px;
+    height: 60px;
     position: sticky;
     top: 0;
     z-index: 1000;
@@ -35,62 +45,106 @@ body {
     align-items: center;
     justify-content: space-between;
     gap: 12px;
+    border-bottom: 1px solid rgba(76,161,175,0.25);
 }
-
-.navbar a {
-    text-decoration: none;
-    color: rgba(255,255,255,0.85);
-    font-size: 15px;
-    position: relative;
-    transition: 0.3s;
-}
-.navbar a::after {
-    content: "";
-    position: absolute;
-    width: 0%;
-    height: 2px;
-    left: 0;
-    bottom: -4px;
-    background: #fff;
-    transition: width 0.3s ease;
-}
-.navbar a:hover::after { width: 100%; }
-.navbar a:hover { color: #fff; }
-.navbar a.fw-bold { color: #fff; }
 
 .logo-gradient {
-    font-weight: bold;
-    font-size: 28px;
-    background: linear-gradient(to right, #ffffff, #4ca1af);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    font-weight: 800;
+    font-size: 22px;
+    letter-spacing: -0.5px;
+    color: #fff;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 4px;
     flex-shrink: 0;
 }
+.logo-gradient span {
+    color: #4ca1af;
+}
+.logo-gradient:hover { color: #fff; text-decoration: none; }
 
 /* Desktop links */
 .nav-desktop-links {
     display: none;
     align-items: center;
-    gap: 20px;
+    gap: 4px;
     flex: 1;
     justify-content: center;
 }
 
+.nav-link-item {
+    color: rgba(255,255,255,0.7);
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    padding: 6px 12px;
+    border-radius: 8px;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.nav-link-item:hover,
+.nav-link-item.active {
+    color: #fff;
+    background: rgba(76,161,175,0.15);
+}
+.nav-link-item .nav-icon { font-size: 14px; opacity: 0.8; }
+
 /* Auth */
 .nav-auth { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
 
-.logout-btn {
-    color: rgba(255,255,255,0.8);
-    border: 1px solid rgba(255,255,255,0.4);
-    padding: 6px 14px;
-    border-radius: 20px;
+.btn-nav-ghost {
+    color: rgba(255,255,255,0.75);
     font-size: 13px;
-    transition: all 0.3s ease;
+    font-weight: 500;
+    text-decoration: none;
+    padding: 6px 14px;
+    border-radius: 8px;
+    transition: all 0.2s;
+}
+.btn-nav-ghost:hover {
+    color: #fff;
+    background: rgba(255,255,255,0.08);
+}
+
+.btn-nav-solid {
+    background: #4ca1af;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    padding: 6px 16px;
+    border-radius: 8px;
+    transition: all 0.2s;
     white-space: nowrap;
 }
-.logout-btn:hover {
-    background: rgba(255,255,255,0.15);
-    color: white;
+.btn-nav-solid:hover {
+    background: #3d8f9c;
+    color: #fff;
+    text-decoration: none;
+}
+
+/* Saved badge */
+.saved-wrap {
+    position: relative;
+}
+.saved-badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    background: #e24b4a;
+    color: #fff;
+    font-size: 9px;
+    font-weight: 700;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #1e2d3d;
 }
 
 /* Hamburger */
@@ -107,9 +161,9 @@ body {
 }
 .nav-hamburger span {
     display: block;
-    width: 22px;
+    width: 20px;
     height: 2px;
-    background: white;
+    background: rgba(255,255,255,0.85);
     border-radius: 2px;
     transition: all 0.25s ease;
 }
@@ -121,125 +175,245 @@ body {
 .nav-mobile-menu {
     display: none;
     position: fixed;
-    top: 64px;
+    top: 60px;
     left: 0;
     right: 0;
-    background: #1e2d3d;
-    padding: 8px 16px 16px;
+    background: #1a2535;
+    padding: 8px 12px 16px;
     z-index: 999;
     border-bottom: 2px solid #4ca1af;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.3);
 }
 .nav-mobile-menu.open { display: block; }
+
 .nav-mobile-menu a {
     display: flex;
     align-items: center;
     gap: 12px;
-    color: rgba(255,255,255,0.85) !important;
-    font-size: 15px;
+    color: rgba(255,255,255,0.75);
+    font-size: 14px;
     font-weight: 500;
-    padding: 12px 10px;
-    border-bottom: 1px solid rgba(255,255,255,0.07);
-    border-radius: 8px;
-    transition: all 0.2s;
+    padding: 11px 12px;
+    border-radius: 10px;
+    transition: all 0.15s;
     text-decoration: none;
+    margin-bottom: 2px;
 }
-.nav-mobile-menu a::after { display: none !important; }
 .nav-mobile-menu a:hover,
 .nav-mobile-menu a.active {
-    color: white !important;
-    background: rgba(255,255,255,0.08);
+    color: #fff;
+    background: rgba(76,161,175,0.15);
 }
-.nav-mobile-menu a:last-child { border-bottom: none; }
+.nav-mobile-menu a .mi {
+    width: 20px;
+    font-size: 15px;
+    text-align: center;
+    opacity: 0.8;
+    color: #4ca1af;
+}
 .mobile-divider {
     height: 1px;
-    background: rgba(255,255,255,0.1);
-    margin: 6px 0;
+    background: rgba(255,255,255,0.07);
+    margin: 8px 0;
 }
 
-/* ── CONTENT ── */
-.container {
-    width: 90%;
+/* ── PAGE WRAPPER ── */
+.page-wrapper {
+    width: 92%;
     max-width: 1100px;
-    margin: auto;
-    margin-top: 30px;
+    margin: 28px auto;
 }
-.cvb-page {
-    width: 100% !important;
-    max-width: 100% !important;
-    margin: 0 !important;
-    padding: 0 !important;
+.page-wrapper.full-width {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
 }
 
 /* ── BUTTONS ── */
-.btn-custom { background: linear-gradient(to right, #2c3e50, #4ca1af); color: white; border: none; }
-.btn-custom:hover { opacity: 0.9; color: white; }
-.btn-block { width: 100%; padding: 12px; border-radius: 8px; }
-.btn-primary { background: linear-gradient(to right, #2c3e50, #4ca1af) !important; border: none !important; color: #fff !important; }
-.btn-primary:hover { opacity: 0.9; color: #fff !important; }
-.btn-main { background: linear-gradient(to right, #2c3e50, #4ca1af); color: white; border: none; padding: 10px 16px; border-radius: 8px; font-weight: 600; }
-.btn-main:hover { opacity: 0.9; color: white; }
+.btn-primary {
+    background: #1e2d3d !important;
+    border: none !important;
+    color: #fff !important;
+    font-weight: 600;
+    border-radius: 8px;
+    transition: opacity 0.2s;
+}
+.btn-primary:hover { opacity: 0.88; color: #fff !important; }
+
+.btn-teal {
+    background: #4ca1af;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.btn-teal:hover { background: #3d8f9c; color: #fff; }
 
 /* ── FORMS ── */
+.form-control {
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    font-size: 14px;
+    color: var(--text);
+    padding: 9px 14px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
 .form-control:focus {
-    border-color: var(--primary-dark);
-    box-shadow: 0 0 0 0.1rem rgba(44,62,80,0.25);
+    border-color: #4ca1af;
+    box-shadow: 0 0 0 3px rgba(76,161,175,0.15);
+    outline: none;
+}
+
+/* ── DISCLAIMER ── */
+.site-disclaimer {
+    text-align: center;
+    font-size: 12px;
+    color: #94a3b8;
+    padding: 16px;
+    margin-top: 10px;
 }
 
 /* ── FOOTER ── */
 .footer {
     background: #0f172a;
-    color: #ccc;
-    padding: 40px 16px 20px;
-    margin-top: 50px;
+    color: #94a3b8;
+    padding: 48px 20px 24px;
+    margin-top: 60px;
 }
-.footer-container {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 28px;
+.footer-inner {
     max-width: 1100px;
     margin: auto;
 }
-.footer-middle { flex: 1.5; }
-.footer-column { min-width: 0; }
-.footer-column h5 { color: #fff; margin-bottom: 12px; font-size: 14px; }
-.footer-column a { display: block; color: #94a3b8; text-decoration: none; margin-bottom: 6px; font-size: 13px; position: relative; transition: color 0.2s; }
-.footer-column a::after { content: ""; position: absolute; width: 0%; height: 1px; left: 0; bottom: -2px; background: #4ca1af; transition: width 0.3s; }
-.footer-column a:hover::after { width: 100%; }
-.footer-column a:hover { color: var(--primary-light); }
-.footer a { color: #94a3b8 !important; }
-.footer a:hover { color: var(--primary-light) !important; }
+.footer-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 32px;
+}
+.footer-col h5 {
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+}
+.footer-col a {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #64748b;
+    text-decoration: none;
+    font-size: 13px;
+    margin-bottom: 8px;
+    transition: color 0.2s;
+}
+.footer-col a:hover { color: #4ca1af; }
 
-.footer-logo { font-weight: bold; font-size: 20px; background: linear-gradient(to right, #2c3e50, #4ca1af); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-.footer-bottom { text-align: center; margin-top: 24px; border-top: 1px solid #1e293b; padding-top: 14px; font-size: 12px; color: #475569; max-width: 1100px; margin: 24px auto 0; padding-top: 14px; }
+.footer-brand p {
+    font-size: 13px;
+    color: #475569;
+    margin-top: 10px;
+    line-height: 1.7;
+    max-width: 260px;
+}
+.footer-logo {
+    font-size: 20px;
+    font-weight: 800;
+    color: #fff;
+    text-decoration: none;
+    letter-spacing: -0.5px;
+}
+.footer-logo span { color: #4ca1af; }
+.footer-logo:hover { color: #fff; text-decoration: none; }
 
-.subscribe-box { display: flex; width: 100%; margin-top: 10px; border-radius: 20px; overflow: hidden; border: 1px solid #334155; }
-.subscribe-box input { flex: 1; height: 36px; background: #1e293b; border: none; color: white; padding: 0 12px; font-size: 13px; outline: none; min-width: 0; }
-.subscribe-box input::placeholder { color: #64748b; }
-.subscribe-box button { border-radius: 0; background: linear-gradient(to right, #2c3e50, #4ca1af); color: white; border: none; padding: 0 14px; font-size: 13px; font-weight: 600; white-space: nowrap; cursor: pointer; }
-.subscribe-box button:hover { opacity: 0.9; }
+.social-row { display: flex; gap: 8px; margin-top: 16px; flex-wrap: wrap; }
+.social-btn {
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    background: #1e293b;
+    color: #64748b;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    text-decoration: none;
+    transition: all 0.2s;
+    border: 1px solid #1e293b;
+}
+.social-btn:hover {
+    background: #4ca1af;
+    color: #fff;
+    border-color: #4ca1af;
+    transform: translateY(-2px);
+}
 
-.social-icons { display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
-.social-icons a { width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; background: #1e293b; border-radius: 50%; color: #94a3b8; font-size: 13px; transition: all 0.3s ease; }
-.social-icons a::after { display: none !important; }
-.social-icons a:hover { background: linear-gradient(to right, #2c3e50, #4ca1af); color: #fff; transform: translateY(-3px); }
+.subscribe-row {
+    display: flex;
+    border: 1px solid #1e293b;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-top: 10px;
+}
+.subscribe-row input {
+    flex: 1;
+    background: #1e293b;
+    border: none;
+    color: #fff;
+    padding: 9px 12px;
+    font-size: 13px;
+    outline: none;
+    min-width: 0;
+}
+.subscribe-row input::placeholder { color: #475569; }
+.subscribe-row button {
+    background: #4ca1af;
+    color: #fff;
+    border: none;
+    padding: 9px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.2s;
+}
+.subscribe-row button:hover { background: #3d8f9c; }
+
+.footer-bottom {
+    border-top: 1px solid #1e293b;
+    padding-top: 20px;
+    margin-top: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+    font-size: 12px;
+    color: #334155;
+}
 
 /* ── SCROLLBAR ── */
 ::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-thumb { background: linear-gradient(to bottom, #2c3e50, #4ca1af); border-radius: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #2c3e50; border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: #4ca1af; }
 
-/* ── TABLET ≥640px ── */
+/* ── RESPONSIVE ── */
 @media (min-width: 640px) {
-    .footer-container { grid-template-columns: 1fr 1fr; }
+    .footer-grid { grid-template-columns: 1.4fr 1fr 1fr; }
 }
-
-/* ── DESKTOP ≥1024px ── */
 @media (min-width: 1024px) {
-    .navbar { padding: 0 40px; }
-    .logo-gradient { font-size: 36px; }
+    .navbar { padding: 0 40px; height: 64px; }
+    .logo-gradient { font-size: 24px; }
     .nav-desktop-links { display: flex; }
     .nav-hamburger { display: none; }
-    .footer-container { grid-template-columns: 1.5fr 1fr 1fr 1.5fr; }
+    .footer-grid { grid-template-columns: 1.6fr 1fr 1fr 1.5fr; }
+    .nav-mobile-menu { top: 64px; }
 }
 </style>
 </head>
@@ -247,161 +421,247 @@ body {
 <body>
 
 <!-- ═══════ NAVBAR ═══════ -->
-<div class="navbar">
+<nav class="navbar" role="navigation" aria-label="Main navigation">
 
-    <a href="/" class="logo-gradient">DEREJA.et</a>
+    <a href="/" class="logo-gradient">DEREJA<span>.et</span></a>
 
     <!-- Desktop links -->
     <div class="nav-desktop-links">
-        <a href="/" class="{% if request.path == '/' %}fw-bold{% endif %}">Home</a>
-        <a href="/jobs/" class="{% if '/jobs/' in request.path and 'cv' not in request.path %}fw-bold{% endif %}">Jobs</a>
-        <a href="{% url 'cv_builder' %}" class="{% if 'cv' in request.path %}fw-bold{% endif %}">CV Builder</a>
-        <a href="{% url 'contact' %}" class="{% if 'contact' in request.path %}fw-bold{% endif %}">Contact</a>
-        <a href="/jobs/saved/" class="d-flex align-items-center gap-1 position-relative {% if 'saved' in request.path %}fw-bold{% endif %}">
-            <i class="fas fa-bookmark"></i> Saved
-            <span id="savedCountBadge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size:10px;">0</span>
+        <a href="/" class="nav-link-item {% if request.path == '/' %}active{% endif %}">
+            <i class="fas fa-home nav-icon"></i> Home
+        </a>
+        <a href="/jobs/" class="nav-link-item {% if '/jobs/' in request.path and 'cv' not in request.path %}active{% endif %}">
+            <i class="fas fa-briefcase nav-icon"></i> Jobs
+        </a>
+        <a href="{% url 'cv_builder' %}" class="nav-link-item {% if 'cv' in request.path %}active{% endif %}">
+            <i class="fas fa-file-alt nav-icon"></i> CV Builder
+        </a>
+        <a href="{% url 'contact' %}" class="nav-link-item {% if 'contact' in request.path %}active{% endif %}">
+            <i class="fas fa-envelope nav-icon"></i> Contact
+        </a>
+        <a href="/jobs/saved/" class="nav-link-item saved-wrap {% if 'saved' in request.path %}active{% endif %}">
+            <i class="fas fa-bookmark nav-icon"></i> Saved
+            <span id="savedCountBadge" class="saved-badge" style="display:none;">0</span>
         </a>
     </div>
 
     <!-- Right side -->
-    <div style="display:flex;align-items:center;gap:10px;">
+    <div style="display:flex;align-items:center;gap:6px;">
         <div class="nav-auth">
             {% if user.is_authenticated %}
-                <a href="/accounts/logout/" class="logout-btn">Logout</a>
+                <a href="/accounts/logout/" class="btn-nav-ghost">
+                    <i class="fas fa-sign-out-alt" style="margin-right:4px;"></i>Logout
+                </a>
             {% else %}
-                <a href="/accounts/login/" style="color:rgba(255,255,255,0.8);font-size:13px;">Login</a>
-                <a href="/accounts/register/" class="logout-btn">Register</a>
+                <a href="/accounts/login/" class="btn-nav-ghost">Login</a>
+                <a href="/accounts/register/" class="btn-nav-solid">Register</a>
             {% endif %}
         </div>
-        <button class="nav-hamburger" id="hamburger" aria-label="Menu">
+        <button class="nav-hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
             <span></span><span></span><span></span>
         </button>
     </div>
 
-</div>
+</nav>
 
 <!-- Mobile Menu -->
-<div class="nav-mobile-menu" id="mobileMenu">
-    <a href="/" class="{% if request.path == '/' %}active{% endif %}"><i class="fas fa-home" style="width:18px"></i>Home</a>
-    <a href="/jobs/" class="{% if '/jobs/' in request.path and 'cv' not in request.path %}active{% endif %}"><i class="fas fa-briefcase" style="width:18px"></i>Jobs</a>
-    <a href="{% url 'cv_builder' %}" class="{% if 'cv' in request.path %}active{% endif %}"><i class="fas fa-file-alt" style="width:18px"></i>CV Builder</a>
-    <a href="{% url 'contact' %}" class="{% if 'contact' in request.path %}active{% endif %}"><i class="fas fa-envelope" style="width:18px"></i>Contact</a>
-    <a href="/jobs/saved/"><i class="fas fa-bookmark" style="width:18px"></i>Saved Jobs</a>
+<div class="nav-mobile-menu" id="mobileMenu" role="menu">
+    <a href="/" class="{% if request.path == '/' %}active{% endif %}" role="menuitem">
+        <i class="fas fa-home mi"></i>Home
+    </a>
+    <a href="/jobs/" class="{% if '/jobs/' in request.path and 'cv' not in request.path %}active{% endif %}" role="menuitem">
+        <i class="fas fa-briefcase mi"></i>Jobs
+    </a>
+    <a href="{% url 'cv_builder' %}" class="{% if 'cv' in request.path %}active{% endif %}" role="menuitem">
+        <i class="fas fa-file-alt mi"></i>CV Builder
+    </a>
+    <a href="{% url 'contact' %}" class="{% if 'contact' in request.path %}active{% endif %}" role="menuitem">
+        <i class="fas fa-envelope mi"></i>Contact
+    </a>
+    <a href="/jobs/saved/" role="menuitem">
+        <i class="fas fa-bookmark mi"></i>Saved Jobs
+    </a>
     <div class="mobile-divider"></div>
     {% if user.is_authenticated %}
-        <a href="/accounts/logout/"><i class="fas fa-sign-out-alt" style="width:18px"></i>Logout</a>
+        <a href="/accounts/logout/" role="menuitem">
+            <i class="fas fa-sign-out-alt mi"></i>Logout
+        </a>
     {% else %}
-        <a href="/accounts/login/"><i class="fas fa-sign-in-alt" style="width:18px"></i>Login</a>
-        <a href="/accounts/register/"><i class="fas fa-user-plus" style="width:18px"></i>Register</a>
+        <a href="/accounts/login/" role="menuitem">
+            <i class="fas fa-sign-in-alt mi"></i>Login
+        </a>
+        <a href="/accounts/register/" role="menuitem">
+            <i class="fas fa-user-plus mi"></i>Register
+        </a>
     {% endif %}
 </div>
 
-<!-- Content -->
-<div class="{% block container_class %}container{% endblock %}">
+<!-- ═══════ PAGE CONTENT ═══════ -->
+<div class="{% block container_class %}page-wrapper{% endblock %}">
     {% block content %}{% endblock %}
 </div>
 
-<p style="font-size:13px;color:#888;margin-top:20px;text-align:center;">
-    DEREJA.et is not responsible for external job postings.
+<p class="site-disclaimer">
+    DEREJA.et is not responsible for the accuracy of external job postings.
 </p>
 
-<!-- Footer -->
-<footer class="footer">
-    <div class="footer-container">
-        <div class="footer-column">
-            <a href="/" class="footer-logo">DEREJA.et</a>
-            <p style="font-size:13px;color:#94a3b8;margin-top:8px;line-height:1.6;">
-                Find the latest job opportunities in Ethiopia.<br>Simple. Fast. Reliable.
-            </p>
-            <div class="social-icons">
-                <a href="https://facebook.com/yourpage"><i class="fab fa-facebook-f"></i></a>
-                <a href="https://t.me/DEREJAet"><i class="fab fa-telegram"></i></a>
-                <a href="https://linkedin.com/company/yourcompany"><i class="fab fa-linkedin-in"></i></a>
-                <a href="https://twitter.com/yourhandle"><i class="fab fa-x-twitter"></i></a>
+<!-- ═══════ FOOTER ═══════ -->
+<footer class="footer" role="contentinfo">
+    <div class="footer-inner">
+        <div class="footer-grid">
+
+            <!-- Brand -->
+            <div class="footer-col footer-brand">
+                <a href="/" class="footer-logo">DEREJA<span>.et</span></a>
+                <p>Find the latest job opportunities in Ethiopia. Simple, fast, and reliable.</p>
+                <div class="social-row">
+                    <a href="https://facebook.com/yourpage" class="social-btn" aria-label="Facebook">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="https://t.me/DEREJAet" class="social-btn" aria-label="Telegram">
+                        <i class="fab fa-telegram"></i>
+                    </a>
+                    <a href="https://linkedin.com/company/yourcompany" class="social-btn" aria-label="LinkedIn">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+                    <a href="https://twitter.com/yourhandle" class="social-btn" aria-label="Twitter / X">
+                        <i class="fab fa-x-twitter"></i>
+                    </a>
+                </div>
             </div>
-        </div>
-        <div class="footer-column footer-middle">
-            <h5>Quick Links</h5>
-            <a href="/">Home</a>
-            <a href="/jobs/">Jobs</a>
-            <a href="{% url 'contact' %}">Contact</a>
-            <a href="{% url 'about' %}">About Us</a>
-        </div>
-        <div class="footer-column">
-            <h5>Legal</h5>
-            <a href="{% url 'privacy' %}">Privacy Policy</a>
-            <a href="{% url 'terms' %}">Terms of Service</a>
-            <a href="{% url 'disclaimer' %}">Disclaimer</a>
-        </div>
-        <div class="footer-column">
-            <h5>Follow Us</h5>
-            <h5 class="mt-3">Stay Updated</h5>
-            <div class="subscribe-box">
-                <input id="footerEmail" type="email" placeholder="Enter your email">
-                <button onclick="subscribeFooter()">Subscribe</button>
+
+            <!-- Quick links -->
+            <div class="footer-col">
+                <h5>Quick links</h5>
+                <a href="/"><i class="fas fa-home" style="width:14px;"></i>Home</a>
+                <a href="/jobs/"><i class="fas fa-briefcase" style="width:14px;"></i>Jobs</a>
+                <a href="{% url 'contact' %}"><i class="fas fa-envelope" style="width:14px;"></i>Contact</a>
+                <a href="{% url 'about' %}"><i class="fas fa-info-circle" style="width:14px;"></i>About us</a>
             </div>
-            <p id="footerMsg" style="font-size:12px;margin-top:10px;"></p>
-            <small class="text-muted d-block mt-2">Get latest jobs directly in your inbox.</small>
+
+            <!-- Legal -->
+            <div class="footer-col">
+                <h5>Legal</h5>
+                <a href="{% url 'privacy' %}">Privacy policy</a>
+                <a href="{% url 'terms' %}">Terms of service</a>
+                <a href="{% url 'disclaimer' %}">Disclaimer</a>
+            </div>
+
+            <!-- Newsletter -->
+            <div class="footer-col">
+                <h5>Stay updated</h5>
+                <p style="font-size:13px;color:#475569;margin-bottom:10px;">
+                    Get new jobs delivered straight to your inbox.
+                </p>
+                <div class="subscribe-row">
+                    <input id="footerEmail" type="email" placeholder="your@email.com" aria-label="Email for newsletter">
+                    <button onclick="subscribeFooter()">Subscribe</button>
+                </div>
+                <p id="footerMsg" style="font-size:12px;margin-top:8px;min-height:16px;"></p>
+            </div>
+
+        </div>
+
+        <div class="footer-bottom">
+            <span>© 2026 DEREJA.et — All rights reserved.</span>
+            <span style="display:flex;gap:16px;">
+                <a href="{% url 'privacy' %}" style="color:#334155;text-decoration:none;font-size:12px;transition:color 0.2s;" onmouseover="this.style.color='#4ca1af'" onmouseout="this.style.color='#334155'">Privacy</a>
+                <a href="{% url 'terms' %}" style="color:#334155;text-decoration:none;font-size:12px;transition:color 0.2s;" onmouseover="this.style.color='#4ca1af'" onmouseout="this.style.color='#334155'">Terms</a>
+            </span>
         </div>
     </div>
-    <div class="footer-bottom">© 2026 DEREJA.et. All rights reserved.</div>
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
-// Hamburger
+/* ── Hamburger ── */
 var hamburger = document.getElementById('hamburger');
 var mobileMenu = document.getElementById('mobileMenu');
+
 hamburger.addEventListener('click', function() {
-    hamburger.classList.toggle('open');
-    mobileMenu.classList.toggle('open');
+    var isOpen = mobileMenu.classList.toggle('open');
+    hamburger.classList.toggle('open', isOpen);
+    hamburger.setAttribute('aria-expanded', isOpen);
 });
+
 mobileMenu.querySelectorAll('a').forEach(function(link) {
     link.addEventListener('click', function() {
         hamburger.classList.remove('open');
         mobileMenu.classList.remove('open');
+        hamburger.setAttribute('aria-expanded', 'false');
     });
 });
+
 document.addEventListener('click', function(e) {
     if (!hamburger.contains(e.target) && !mobileMenu.contains(e.target)) {
         hamburger.classList.remove('open');
         mobileMenu.classList.remove('open');
+        hamburger.setAttribute('aria-expanded', 'false');
     }
 });
 
-// CSRF
-function getCookie(name) {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-        const cookies = document.cookie.split(';');
-        for (let cookie of cookies) {
-            cookie = cookie.trim();
-            if (cookie.startsWith(name + '=')) {
-                cookieValue = decodeURIComponent(cookie.slice(name.length + 1));
-                break;
-            }
+/* ── Saved badge ── */
+(function() {
+    var badge = document.getElementById('savedCountBadge');
+    if (!badge) return;
+    try {
+        var saved = JSON.parse(localStorage.getItem('savedJobs') || '[]');
+        if (saved.length > 0) {
+            badge.textContent = saved.length;
+            badge.style.display = 'flex';
         }
+    } catch(e) {}
+})();
+
+/* ── CSRF ── */
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        document.cookie.split(';').forEach(function(c) {
+            c = c.trim();
+            if (c.startsWith(name + '=')) {
+                cookieValue = decodeURIComponent(c.slice(name.length + 1));
+            }
+        });
     }
     return cookieValue;
 }
 
-// Subscribe
+/* ── Footer subscribe ── */
 function subscribeFooter() {
-    const email = document.getElementById("footerEmail").value;
-    const msg = document.getElementById("footerMsg");
-    if (!email) { msg.innerHTML = "Please enter email"; msg.style.color = "red"; return; }
-    fetch("/subscribe/", {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded", "X-CSRFToken": getCookie("csrftoken") },
-        body: "email=" + encodeURIComponent(email)
+    var email = document.getElementById('footerEmail').value.trim();
+    var msg   = document.getElementById('footerMsg');
+
+    if (!email) {
+        msg.innerHTML = 'Please enter your email.';
+        msg.style.color = '#e24b4a';
+        return;
+    }
+
+    fetch('/subscribe/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRFToken': getCookie('csrftoken')
+        },
+        body: 'email=' + encodeURIComponent(email)
     })
-    .then(res => res.json())
-    .then(data => {
-        if (data.error) { msg.innerHTML = data.error; msg.style.color = "red"; }
-        else { msg.innerHTML = data.message; msg.style.color = "lightgreen"; document.getElementById("footerEmail").value = ""; }
+    .then(function(res) { return res.json(); })
+    .then(function(data) {
+        if (data.error) {
+            msg.innerHTML = data.error;
+            msg.style.color = '#e24b4a';
+        } else {
+            msg.innerHTML = '✓ ' + (data.message || 'Subscribed!');
+            msg.style.color = '#4ca1af';
+            document.getElementById('footerEmail').value = '';
+        }
     })
-    .catch(() => { msg.innerHTML = "Server error. Try again."; msg.style.color = "red"; });
+    .catch(function() {
+        msg.innerHTML = 'Server error — please try again.';
+        msg.style.color = '#e24b4a';
+    });
 }
 </script>
 
